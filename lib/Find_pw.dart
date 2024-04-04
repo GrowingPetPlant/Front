@@ -85,6 +85,7 @@ class Find_pw extends StatelessWidget { // StatelessWidget : 상태가 없는 �
                       borderRadius: BorderRadius.circular(10.0), // 버튼 테두리의 둥글기 정도 설정
                     ),
                   ),
+                  fixedSize: MaterialStateProperty.all<Size>(Size.fromHeight(60)), // 높이 설정
                 ),
                 child: Text(
                   '비밀번호 찾기', // 버튼 텍스트

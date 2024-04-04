@@ -7,5 +7,5 @@ import './Home.dart';
 
 
 void main() {
-  runApp(const Log_in());
+  runApp(const Home());
 }
