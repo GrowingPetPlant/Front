@@ -70,15 +70,40 @@ class Home extends StatelessWidget {
                                   Container(
                                       padding: EdgeInsets.all(3),
                                       child: Align(
-                                          child: Text(
-                                            '20°C',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
+                                        child: Stack(
+                                          children: [
+                                            // 흰색 테두리 효과를 위한 텍스트
+                                            Text(
+                                              '20°C',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                foreground: Paint()
+                                                  ..style = PaintingStyle.stroke
+                                                  ..strokeWidth = 3
+                                                  ..color = Colors.white, // 흰색 텍스트 스트로크
+                                                shadows: [
+                                                  Shadow(
+                                                    blurRadius: 2,
+                                                    color: Colors.white, // 흰색 테두리
+                                                  ),
+                                                ],
+                                              ),
+                                              textAlign: TextAlign.left,
                                             ),
-                                            textAlign: TextAlign.left,
-                                          )
-                                      )
+                                            // 원래의 검정색 텍스트
+                                            Text(
+                                              '20°C',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                color: Colors.black, // 검정색 텍스트
+                                              ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          ],
+                                      ),
+                                    ),
                                   ),
                                 ],
                               )
@@ -103,15 +128,39 @@ class Home extends StatelessWidget {
                                   ),
                                   Container(
                                       padding: EdgeInsets.all(3),
-                                      child: Align(
-                                          child: Text(
+                                      child: Align(child: Stack(
+                                        children: [
+                                          // 흰색 테두리 효과를 위한 텍스트
+                                          Text(
                                             '30%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
+                                              foreground: Paint()
+                                                ..style = PaintingStyle.stroke
+                                                ..strokeWidth = 3
+                                                ..color = Colors.white, // 흰색 텍스트 스트로크
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.white, // 흰색 테두리
+                                                ),
+                                              ],
                                             ),
                                             textAlign: TextAlign.left,
-                                          )
+                                          ),
+                                          // 원래의 검정색 텍스트
+                                          Text(
+                                            '30%',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.black, // 검정색 텍스트
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ],
+                                      ),
                                       )
                                   ),
                                 ],
@@ -137,15 +186,39 @@ class Home extends StatelessWidget {
                                   ),
                                   Container(
                                       padding: EdgeInsets.all(3),
-                                      child: Align(
-                                          child: Text(
+                                      child: Align(child: Stack(
+                                        children: [
+                                          // 흰색 테두리 효과를 위한 텍스트
+                                          Text(
                                             '50%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
+                                              foreground: Paint()
+                                                ..style = PaintingStyle.stroke
+                                                ..strokeWidth = 3
+                                                ..color = Colors.white, // 흰색 텍스트 스트로크
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.white, // 흰색 테두리
+                                                ),
+                                              ],
                                             ),
                                             textAlign: TextAlign.left,
-                                          )
+                                          ),
+                                          // 원래의 검정색 텍스트
+                                          Text(
+                                            '50%',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.black, // 검정색 텍스트
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ],
+                                      ),
                                       )
                                   ),
                                 ],
@@ -171,15 +244,39 @@ class Home extends StatelessWidget {
                                   ),
                                   Container(
                                       padding: EdgeInsets.all(3),
-                                      child: Align(
-                                          child: Text(
+                                      child: Align(child: Stack(
+                                        children: [
+                                          // 흰색 테두리 효과를 위한 텍스트
+                                          Text(
                                             '30%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
+                                              foreground: Paint()
+                                                ..style = PaintingStyle.stroke
+                                                ..strokeWidth = 3
+                                                ..color = Colors.white, // 흰색 텍스트 스트로크
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.white, // 흰색 테두리
+                                                ),
+                                              ],
                                             ),
                                             textAlign: TextAlign.left,
-                                          )
+                                          ),
+                                          // 원래의 검정색 텍스트
+                                          Text(
+                                            '30%',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.black, // 검정색 텍스트
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ],
+                                      ),
                                       )
                                   ),
                                 ],
@@ -199,56 +296,71 @@ class Home extends StatelessWidget {
 
                           // 급수
                           Container(
-                            width: 85,
-                            height: 85,
+                            width: 70,
+                            height: 70,
                             decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                                image: DecorationImage(
-                                    image: AssetImage('assets/images/water.png'),
-                                    fit: BoxFit.cover
-                                )
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/water.png',
+                                width: 55,
+                                height: 55,
+                              ),
                             ),
                           ),
 
                           // 조명
                           Container(
-                            width: 85,
-                            height: 85,
+                            width: 70,
+                            height: 70,
                             decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                                image: DecorationImage(
-                                    image: AssetImage('assets/images/lamp.png'),
-                                    fit: BoxFit.cover
-                                )
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/lamp.png',
+                                width: 55,
+                                height: 55,
+                              ),
                             ),
                           ),
 
                           // 환풍
                           Container(
-                            width: 85,
-                            height: 85,
+                            width: 70,
+                            height: 70,
                             decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                                image: DecorationImage(
-                                    image: AssetImage('assets/images/fan.png'),
-                                    fit: BoxFit.cover
-                                )
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/fan.png',
+                                width: 55,
+                                height: 55,
+                              ),
                             ),
                           ),
 
                           // 팁 확인
                           Container(
-                            width: 85,
-                            height: 85,
+                            width: 70,
+                            height: 70,
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                                image: DecorationImage(
-                                    image: AssetImage('assets/images/info.png'),
-                                    fit: BoxFit.cover
-                                )
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/info.png',
+                                width: 55,
+                                height: 55,
+                              ),
                             ),
                           )
-
                         ],
                       )
                   )
