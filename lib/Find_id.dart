@@ -9,17 +9,18 @@ class Find_id extends StatelessWidget {
       title: 'MyPetPlant',
       home: Scaffold(
         body: Padding(
-          padding: EdgeInsets.all(50.0),
+          padding: EdgeInsets.all(30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 40),
               Center(
                 child: Image.asset(
                   'assets/images/logo.png', // 로고 이미지 파일 경로
                   height: 73, // 로고 이미지의 높이
                 ),
               ),
+              SizedBox(height: 10),
               Center(
                 child: Text(
                   '아이디 찾기',
