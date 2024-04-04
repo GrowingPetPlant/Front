@@ -9,17 +9,18 @@ class Find_pw extends StatelessWidget { // StatelessWidget : 상태가 없는 �
       title: 'MyPetPlant', // App title
       home: Scaffold (
         body: Padding( // 자식 위젯 감싸고 내부 여백 추가
-          padding: EdgeInsets.all(50.0), // 양 측면에 16.0의 내부 여백 추가
+          padding: EdgeInsets.all(30.0), // 양 측면에 16.0의 내부 여백 추가
           child: Column( // 세로로 위젯들을 배열
             crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯이 교차 축을 따라 확장
             children: [ // 자식 위젯들
-              SizedBox(height: 10), // 여백 추가
+              SizedBox(height: 40), // 여백 추가
               Center( // 자식을 가운데로 정렬
                 child: Image.asset( // 이미지 리소스 표시
                   'assets/images/logo.png', // 로고 이미지 파일 경로
                   height: 73, // 로고 이미지의 높이
                 ),
               ),
+              SizedBox(height: 10),
               Center(
                 child: Text(
                   '비밀번호 찾기',
