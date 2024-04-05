@@ -296,8 +296,8 @@ class Home extends StatelessWidget {
 
                           // 급수
                           Container(
-                            width: 70,
-                            height: 70,
+                            width: 80,
+                            height: 80,
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(20)),
                             ),
@@ -313,8 +313,8 @@ class Home extends StatelessWidget {
 
                           // 조명
                           Container(
-                            width: 70,
-                            height: 70,
+                            width: 80,
+                            height: 80,
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(20)),
                             ),
@@ -330,8 +330,8 @@ class Home extends StatelessWidget {
 
                           // 환풍
                           Container(
-                            width: 70,
-                            height: 70,
+                            width: 80,
+                            height: 80,
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(20)),
                             ),
@@ -347,8 +347,8 @@ class Home extends StatelessWidget {
 
                           // 팁 확인
                           Container(
-                            width: 70,
-                            height: 70,
+                            width: 80,
+                            height: 80,
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.all(Radius.circular(20)),
                             ),
