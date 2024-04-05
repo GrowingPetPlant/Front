@@ -5,7 +5,6 @@ import './Find_pw.dart';
 import './Sign_in.dart';
 import './Home.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MyPetPlant',
-      home: Home(),
+      home: Log_in(),
     );
   }
 }
