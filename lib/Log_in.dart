@@ -53,54 +53,55 @@ class _Log_inState extends State<Log_in> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xFFF2F2F2),
       body: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Container(
-          margin: EdgeInsets.fromLTRB(0, 195, 0, 40),
+        padding: EdgeInsets.all(screenWidth*0.04),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                alignment: Alignment.center,
-                child: Image(
-                  image: AssetImage('assets/images/logo.png'),
-                  height: 100,
-                  width: 92, // 로고 이미지의 높이
+
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 30,horizontal: 0),
                   alignment: Alignment.center,
+                  child: Image(
+                    image: AssetImage('assets/images/logo.png'),
+                    height: 100,
+                    alignment: Alignment.center,
+                  ),
                 ),
-              ),
-              SizedBox(height: 40),
-              Container(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xFFADC178), width: 2),
-                      ),
-                      child: SizedBox(
-                        height: 50, // 텍스트 필드 창 높이 조절
-                        child: TextField(
-                          controller: _idController,
+
+                Container(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0,0,0,10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Color(0xFF81AE17), width: 2),
+                        ),
+                        child: Container(
+                          height: 50, // 텍스트 필드 창 높이 조절
+                          child: TextField(
                           style: TextStyle(fontSize: 16),
                           decoration: InputDecoration(
                             hintText: '아이디',
-                            contentPadding: EdgeInsets.all(10),
+                            contentPadding: EdgeInsets.fromLTRB(10,0,10,0),
+
                             border: InputBorder.none,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xFFADC178), width: 2),
+                        border: Border.all(color: Color(0xFF81AE17), width: 2),
                       ),
-                      child: SizedBox(
+                      child : SizedBox(
                         height: 50, // 텍스트 필드 창 높이 조절
                         child: TextField(
                           controller: _passwordController,
@@ -108,12 +109,13 @@ class _Log_inState extends State<Log_in> {
                           style: TextStyle(fontSize: 16),
                           decoration: InputDecoration(
                             hintText: '비밀번호',
-                            contentPadding: EdgeInsets.all(10),
+                            contentPadding: EdgeInsets.fromLTRB(10,0,10,0),
                             border: InputBorder.none,
                           ),
                         ),
                       ),
                     ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -131,16 +133,9 @@ class _Log_inState extends State<Log_in> {
                                 fontSize: 14, color: Color(0xFF515151)),
                           ),
                         ),
-                        Container(
-                          height: 1, // 구분 선의 높이
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFFC0C0C0)), // 구분 선의 높이와 색상 설정
-                            ),
-                          ),
-                        ),
+
+                        Container(height : 20, width : 1, color : Color(0xffc0c0c0),),
+
                         TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -155,16 +150,9 @@ class _Log_inState extends State<Log_in> {
                                 fontSize: 14, color: Color(0xFF515151)),
                           ),
                         ),
-                        Container(
-                          height: 1, // 구분 선의 높이
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFFC0C0C0)), // 구분 선의 높이와 색상 설정
-                            ),
-                          ),
-                        ),
+
+                        Container(height : 20, width : 1, color : Color(0xffc0c0c0),),
+
                         TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -184,12 +172,23 @@ class _Log_inState extends State<Log_in> {
                   ],
                 ),
               ),
-              Spacer(),
-              ElevatedButton(
+
+            ]
+          ),
+      ),
+
+        bottomNavigationBar:
+          Container(
+            margin : EdgeInsets.only(bottom : 60),
+            color: Color(0xfff2f2f2),
+            child : BottomAppBar(
+              color: Color(0xfff2f2f2),
+              elevation: 0,
+              child :ElevatedButton(
                 onPressed: _login, // 로그인
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      Color(0x8081AE17)), // 로그인 버튼의 색상
+                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xff81AE17)), // 로그인 버튼의 색상
+
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius:
@@ -207,10 +206,8 @@ class _Log_inState extends State<Log_in> {
                       color: Color(0xFFF2F2F2)), // 로그인 버튼의 텍스트 색상
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          )
     );
   }
 }

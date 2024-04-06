@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 List<String> dropdownList = ['토마토', '바질', '수박'];
 String? selectedDropdown;
@@ -11,279 +13,273 @@ class Sign_in extends StatefulWidget {
 }
 
 class Sign_in_view extends State<Sign_in> {
+
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 40),
-                Center(
-                  child: Image.asset(
-                      //로고
-                      'assets/images/logo.png',
-                      width: 71,
-                      height: 73,
+        backgroundColor: Color(0xFFF2F2F2),
+        body: Padding(
+          padding: EdgeInsets.all(screenHeight * 0.04),
+          child : SingleChildScrollView(
+            child : Container(
+              child : Column(
+                children: [
+                  Container(
+                      height: screenHeight*0.15,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Image.asset(
+                            'assets/images/logo.png',
+                            height: screenHeight*0.1,
+                          ),
+                          Text(
+                              '회원가입',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF56280F)
+                              )
+                          ),
+                        ],
+                      )
                   ),
-                ),
-                SizedBox(height: 10),
-                Center(
-                      child: SizedBox(
-                        child: Text(
-                          '회원가입',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF56280F)),),
-                      ),
-                ),
-                SizedBox(height: 30),
-                SizedBox(
-                  // 아이디
-                  width: 331,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight*0.01),
                         child: Text(
                           '아이디',
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
+
                       Container(
-                        height: 40,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: const Color(0xFF81AE17), width: 2),
+                          border: Border.all(color: const Color(0xFF81AE17), width: 2),
                         ),
-                        child: const TextField(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child : const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
                               hintText: '아이디를 입력해주세요',
-                              contentPadding:
-                              EdgeInsets.fromLTRB(10, 0, 0, 10),
-                              border: InputBorder.none),
+                              contentPadding:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              border: InputBorder.none
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  // 비밀번호
-                  width: 331,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight*0.01),
                         child: Text(
                           '비밀번호',
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
                       Container(
-                        height: 40,
+                        alignment: Alignment.center,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                               color: const Color(0xFF81AE17), width: 2),
                         ),
+                        padding: EdgeInsets.only(bottom: 10),
                         child: const TextField(
+                          obscureText: true,
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
-                              hintText: '비밀번호를 설정하세요',
-                              contentPadding:
-                              EdgeInsets.fromLTRB(10, 0, 0, 10),
-                              border: InputBorder.none),
+                              hintText: '비밀번호를 입력해주세요',
+                              contentPadding:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              border: InputBorder.none
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 10),
-                SizedBox(
-                  // 이름
-                  width: 331,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight*0.01),
                         child: Text(
                           '이름',
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
                       Container(
-                        height: 40,
+                        alignment: Alignment.center,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                               color: const Color(0xFF81AE17), width: 2),
                         ),
+                        padding: EdgeInsets.only(bottom: 10),
                         child: const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
                               hintText: '사용자 이름',
-                              contentPadding:
-                              EdgeInsets.fromLTRB(10, 0, 0, 10),
-                              border: InputBorder.none),
+                              contentPadding:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              border: InputBorder.none
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 10),
-                SizedBox(
-                  // 전화번호
-                  width: 331,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+
+
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight*0.01),
                         child: Text(
                           '전화번호',
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
                       Container(
-                        height: 40,
+                        alignment: Alignment.center,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: const Color(0xFF81AE17), width: 2),
+                          border: Border.all(color: const Color(0xFF81AE17), width: 2),
                         ),
+                        padding: EdgeInsets.only(bottom: 10),
                         child: const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
                               hintText: '전화번호를 입력해주세요',
-                              contentPadding:
-                              EdgeInsets.fromLTRB(10, 0, 0, 10),
-                              border: InputBorder.none),
+                              contentPadding:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              border: InputBorder.none
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 10),
-                SizedBox(
-                  // 식물 종
-                  width: 331,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+
+
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight*0.01),
                         child: Text(
                           '식물 종',
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
                       Container(
-                        height: 40,
+                        alignment: Alignment.center,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Color(0xfff2f2f2),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: const Color(0xFF81AE17), width: 2),
+                        ),
+                          child : Padding(
+                            padding : EdgeInsets.all(screenHeight*0.01),
+                            child : DropdownButton(
+                              style: TextStyle(fontSize: 13),
+                              iconSize : 20,
+                              iconEnabledColor: const Color(0xFF98C62C),
+                              hint: const Text('식물 종 선택'),
+                              isExpanded: true,
+                              underline: Container(),
+                              value : selectedDropdown,
+                              items: dropdownList.map((String item) {
+                                return DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(item, style: TextStyle(color : Color(0xFF515151), fontSize: 13),),
+                                );}).toList(),
+                              onChanged: (dynamic value) {
+                                setState(() {
+                                  selectedDropdown = value;
+                                });},
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+
+
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight*0.01),
+                        child: Text(
+                          '식물이름',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                               color: const Color(0xFF81AE17), width: 2),
                         ),
-                        child: SizedBox(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: DropdownButton(
-                              style: const TextStyle(fontSize: 13),
-                              iconSize: 20, // 드롭다운 버튼의 아이콘 크기 변경
-                              iconEnabledColor: const Color(0xFF98C62C), // 드롭다운 버튼 아이콘 색상 변경
-                              hint: const Text(
-                                '식물 종 선택',
-                              ),
-                              isExpanded: true,
-                              underline: Container(),
-                              value: selectedDropdown,
-                              items: dropdownList.map((String item) {
-                                return DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(item),
-                                );
-                              }).toList(),
-                              onChanged: (dynamic value) {
-                                setState(() {
-                                  selectedDropdown = value;
-                                });
-                              },
-                            ),
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: const TextField(
+                          style: TextStyle(fontSize: 13),
+                          decoration: InputDecoration(
+                              hintText: '식물이름을 지어주세요',
+                              contentPadding:EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              border: InputBorder.none
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  // 식물이름
-                  width: 331,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          '식물 이름',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: const Color(0xFF81AE17), width: 2),
-                        ),
-                        child: const TextField(
-                          style: TextStyle(fontSize: 13),
-                          decoration: InputDecoration(
-                              hintText: '식물 이름을 지어주세요.',
-                              contentPadding:
-                              EdgeInsets.fromLTRB(10, 0, 0, 10),
-                              border: InputBorder.none),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40),
-                SizedBox(
-                    height: 60,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: const Color(0x8081AE17)
-                            ),
-                        onPressed: () {},
-                        child: const Text(
-                          '회원가입',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFF2F2F2)), // 아이디 찾기 텍스트의 색상
-                        )),
-                  ),
-                /*const Text('비밀번호'),
-                const Text('이름'),
-                const Text('전화번호'),
-                const Text('식물 종'),
-                const Text('식물 이름'),*/
-              ],
+                ],
+              ),
+
             ),
           ),
         ),
-      );
+        bottomNavigationBar: Container(
+          color: Color(0xfff2f2f2),
+          margin : EdgeInsets.only(bottom : 60),
+          child : BottomAppBar(
+            elevation: 0,
+            color: Color(0xFFF2F2F2),
+            child :ElevatedButton(
+              onPressed: () {}, // 회원가입하기
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Color(0x8081AE17)), // 로그인 버튼의 색상
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0), // 버튼 테두리의 둥글기 정도 설정
+                  ),
+                ),
+                fixedSize: MaterialStateProperty.all<Size>(Size.fromHeight(60)), // 높이 설정
+              ),
+              child: Text(
+                '회원가입',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFF2F2F2)), // 로그인 버튼의 텍스트 색상
+              ),
+            ),
+          ),
+        )
+    );
   }
 }
+
