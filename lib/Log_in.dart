@@ -85,6 +85,7 @@ class _Log_inState extends State<Log_in> {
                         child: Container(
                           height: 50, // 텍스트 필드 창 높이 조절
                           child: TextField(
+                            controller: _idController,
                           style: TextStyle(fontSize: 16),
                           decoration: InputDecoration(
                             hintText: '아이디',
