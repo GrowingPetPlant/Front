@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 List<String> dropdownList = ['토마토', '바질', '수박'];
 String? selectedDropdown;
@@ -183,39 +184,41 @@ class Sign_in_view extends State<Sign_in> {
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.center,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Color(0xfff2f2f2),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: const Color(0xFF81AE17), width: 2),
-                        ),
-                          child : Padding(
-                            padding : EdgeInsets.all(screenHeight*0.01),
-                            child : DropdownButton(
-                              style: TextStyle(fontSize: 13),
-                              iconSize : 20,
-                              iconEnabledColor: const Color(0xFF98C62C),
-                              hint: const Text('식물 종 선택'),
-                              isExpanded: true,
-                              underline: Container(),
-                              value : selectedDropdown,
-                              items: dropdownList.map((String item) {
-                                return DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(item, style: TextStyle(color : Color(0xFF515151), fontSize: 13),),
-                                );}).toList(),
-                              onChanged: (dynamic value) {
-                                setState(() {
-                                  selectedDropdown = value;
-                                });},
+                      DropdownButton2<String>(
+                        style: TextStyle(fontSize: 13, color: Color(0xFF515151)),
+                        hint: const Text('식물 종 선택'),
+                        isExpanded: true,
+                        underline: Container(),
+                        value : selectedDropdown,
+                        items: dropdownList.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedDropdown = value;
+                          });},
+                          buttonStyleData: ButtonStyleData(
+                                height : 50,
+                                decoration: BoxDecoration(
+                                  color: Color(0xfff2f2f2),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Color(0xff81ae17),width : 2)
+                                ),
                             ),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              )
+                            ),
+
                           ),
+                          ],
                         ),
-                    ],
-                  ),
+
 
 
 
@@ -249,7 +252,7 @@ class Sign_in_view extends State<Sign_in> {
                       ),
                     ],
                   ),
-                ],
+]
               ),
 
             ),

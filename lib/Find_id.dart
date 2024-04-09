@@ -113,7 +113,9 @@ class Find_id extends StatelessWidget {
             color: Color(0xfff2f2f2),
             elevation: 0,
             child :ElevatedButton(
-              onPressed: () {}, // 로그인
+              onPressed: () {
+                findIdDialog(context);
+              }, // 로그인
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Color(0xff81AE17)), // 로그인 버튼의 색상
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -134,3 +136,21 @@ class Find_id extends StatelessWidget {
   }
 }
 
+void findIdDialog(context){
+  showDialog(context: context, builder: (context){
+    return Dialog(
+      child : Container(
+        padding: EdgeInsets.all(30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(" 사용자의 아이디는\n[" + "] 입니다.",textAlign : TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff515151)),),
+            TextButton(onPressed: (){
+              Navigator.of(context).pop();
+            }, child: Text("확인",style: TextStyle(fontSize: 16, color: Color(0xff81ae17)),)),
+          ],
+        ),
+      ));
+  });
+}
