@@ -9,8 +9,8 @@ class Home extends StatelessWidget {
         title: 'Home',
         home: Scaffold(
             appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(0),
               child: AppBar(backgroundColor: const Color(0xff63dafe)),
-              preferredSize: Size.fromHeight(0),
             ),
             body: Stack(
                 children: <Widget>[
@@ -24,14 +24,14 @@ class Home extends StatelessWidget {
 
                       // 닉네임
                       child: Align(
-                        alignment: Alignment(0, 0.4),
+                        alignment: const Alignment(0, 0.4),
                         child: Container(
-                            padding: EdgeInsets.all(13),
+                            padding: const EdgeInsets.all(13),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.white, width: 5),
-                                borderRadius: BorderRadius.all(Radius.circular(15)),
+                                borderRadius: const BorderRadius.all(Radius.circular(15)),
                                 color: Colors.black45),
-                            child: Text(
+                            child: const Text(
                               '토마토',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -46,12 +46,12 @@ class Home extends StatelessWidget {
 
                   // 상태바
                   Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
 
                           // 온도
-                          Container(
+                          SizedBox(
                               width: 250,
                               height: 50,
                               child: Row(
@@ -68,7 +68,7 @@ class Home extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                      padding: EdgeInsets.all(3),
+                                      padding: const EdgeInsets.all(3),
                                       child: Align(
                                         child: Stack(
                                           children: [
@@ -82,7 +82,7 @@ class Home extends StatelessWidget {
                                                   ..style = PaintingStyle.stroke
                                                   ..strokeWidth = 3
                                                   ..color = Colors.white, // 흰색 텍스트 스트로크
-                                                shadows: [
+                                                shadows: const [
                                                   Shadow(
                                                     blurRadius: 2,
                                                     color: Colors.white, // 흰색 테두리
@@ -92,7 +92,7 @@ class Home extends StatelessWidget {
                                               textAlign: TextAlign.left,
                                             ),
                                             // 원래의 검정색 텍스트
-                                            Text(
+                                            const Text(
                                               '20°C',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
@@ -110,7 +110,7 @@ class Home extends StatelessWidget {
                           ),
 
                           // 습도
-                          Container(
+                          SizedBox(
                               width: 250,
                               height: 50,
                               child: Row(
@@ -127,7 +127,7 @@ class Home extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                      padding: EdgeInsets.all(3),
+                                      padding: const EdgeInsets.all(3),
                                       child: Align(child: Stack(
                                         children: [
                                           // 흰색 테두리 효과를 위한 텍스트
@@ -140,7 +140,7 @@ class Home extends StatelessWidget {
                                                 ..style = PaintingStyle.stroke
                                                 ..strokeWidth = 3
                                                 ..color = Colors.white, // 흰색 텍스트 스트로크
-                                              shadows: [
+                                              shadows: const [
                                                 Shadow(
                                                   blurRadius: 2,
                                                   color: Colors.white, // 흰색 테두리
@@ -150,7 +150,7 @@ class Home extends StatelessWidget {
                                             textAlign: TextAlign.left,
                                           ),
                                           // 원래의 검정색 텍스트
-                                          Text(
+                                          const Text(
                                             '30%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -168,7 +168,7 @@ class Home extends StatelessWidget {
                           ),
 
                           // 비옥도
-                          Container(
+                          SizedBox(
                               width: 250,
                               height: 50,
                               child: Row(
@@ -185,7 +185,7 @@ class Home extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                      padding: EdgeInsets.all(3),
+                                      padding: const EdgeInsets.all(3),
                                       child: Align(child: Stack(
                                         children: [
                                           // 흰색 테두리 효과를 위한 텍스트
@@ -198,7 +198,7 @@ class Home extends StatelessWidget {
                                                 ..style = PaintingStyle.stroke
                                                 ..strokeWidth = 3
                                                 ..color = Colors.white, // 흰색 텍스트 스트로크
-                                              shadows: [
+                                              shadows: const [
                                                 Shadow(
                                                   blurRadius: 2,
                                                   color: Colors.white, // 흰색 테두리
@@ -208,7 +208,7 @@ class Home extends StatelessWidget {
                                             textAlign: TextAlign.left,
                                           ),
                                           // 원래의 검정색 텍스트
-                                          Text(
+                                          const Text(
                                             '50%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -226,7 +226,7 @@ class Home extends StatelessWidget {
                           ),
 
                           // D-day
-                          Container(
+                          SizedBox(
                               width: 250,
                               height: 50,
                               child: Row(
@@ -243,7 +243,7 @@ class Home extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                      padding: EdgeInsets.all(3),
+                                      padding: const EdgeInsets.all(3),
                                       child: Align(child: Stack(
                                         children: [
                                           // 흰색 테두리 효과를 위한 텍스트
@@ -256,7 +256,7 @@ class Home extends StatelessWidget {
                                                 ..style = PaintingStyle.stroke
                                                 ..strokeWidth = 3
                                                 ..color = Colors.white, // 흰색 텍스트 스트로크
-                                              shadows: [
+                                              shadows: const [
                                                 Shadow(
                                                   blurRadius: 2,
                                                   color: Colors.white, // 흰색 테두리
@@ -266,7 +266,7 @@ class Home extends StatelessWidget {
                                             textAlign: TextAlign.left,
                                           ),
                                           // 원래의 검정색 텍스트
-                                          Text(
+                                          const Text(
                                             '30%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -289,7 +289,7 @@ class Home extends StatelessWidget {
 
                   // 제어 dock
                   Container(
-                      alignment: Alignment(0, 0.9),
+                      alignment: const Alignment(0, 0.9),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

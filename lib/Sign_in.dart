@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 List<String> dropdownList = ['토마토', '바질', '수박'];
@@ -19,14 +17,14 @@ class Sign_in_view extends State<Sign_in> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: Color(0xFFF2F2F2),
+        backgroundColor: const Color(0xFFF2F2F2),
         body: Padding(
           padding: EdgeInsets.all(screenHeight * 0.04),
           child : SingleChildScrollView(
             child : Container(
               child : Column(
                 children: [
-                  Container(
+                  SizedBox(
                       height: screenHeight*0.15,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -35,7 +33,7 @@ class Sign_in_view extends State<Sign_in> {
                             'assets/images/logo.png',
                             height: screenHeight*0.1,
                           ),
-                          Text(
+                          const Text(
                               '회원가입',
                               style: TextStyle(
                                   fontSize: 16,
@@ -52,7 +50,7 @@ class Sign_in_view extends State<Sign_in> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(screenHeight*0.01),
-                        child: Text(
+                        child: const Text(
                           '아이디',
                           style: TextStyle(fontSize: 11),
                         ),
@@ -64,7 +62,7 @@ class Sign_in_view extends State<Sign_in> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: const Color(0xFF81AE17), width: 2),
                         ),
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child : const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
@@ -81,7 +79,7 @@ class Sign_in_view extends State<Sign_in> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(screenHeight*0.01),
-                        child: Text(
+                        child: const Text(
                           '비밀번호',
                           style: TextStyle(fontSize: 11),
                         ),
@@ -94,7 +92,7 @@ class Sign_in_view extends State<Sign_in> {
                           border: Border.all(
                               color: const Color(0xFF81AE17), width: 2),
                         ),
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: const TextField(
                           obscureText: true,
                           style: TextStyle(fontSize: 13),
@@ -114,7 +112,7 @@ class Sign_in_view extends State<Sign_in> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(screenHeight*0.01),
-                        child: Text(
+                        child: const Text(
                           '이름',
                           style: TextStyle(fontSize: 11),
                         ),
@@ -127,7 +125,7 @@ class Sign_in_view extends State<Sign_in> {
                           border: Border.all(
                               color: const Color(0xFF81AE17), width: 2),
                         ),
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
@@ -147,7 +145,7 @@ class Sign_in_view extends State<Sign_in> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(screenHeight*0.01),
-                        child: Text(
+                        child: const Text(
                           '전화번호',
                           style: TextStyle(fontSize: 11),
                         ),
@@ -159,7 +157,7 @@ class Sign_in_view extends State<Sign_in> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: const Color(0xFF81AE17), width: 2),
                         ),
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
@@ -179,13 +177,13 @@ class Sign_in_view extends State<Sign_in> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(screenHeight*0.01),
-                        child: Text(
+                        child: const Text(
                           '식물 종',
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
                       DropdownButton2<String>(
-                        style: TextStyle(fontSize: 13, color: Color(0xFF515151)),
+                        style: const TextStyle(fontSize: 13, color: Color(0xFF515151)),
                         hint: const Text('식물 종 선택'),
                         isExpanded: true,
                         underline: Container(),
@@ -203,9 +201,9 @@ class Sign_in_view extends State<Sign_in> {
                           buttonStyleData: ButtonStyleData(
                                 height : 50,
                                 decoration: BoxDecoration(
-                                  color: Color(0xfff2f2f2),
+                                  color: const Color(0xfff2f2f2),
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Color(0xff81ae17),width : 2)
+                                  border: Border.all(color: const Color(0xff81ae17),width : 2)
                                 ),
                             ),
                             dropdownStyleData: DropdownStyleData(
@@ -227,7 +225,7 @@ class Sign_in_view extends State<Sign_in> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(screenHeight*0.01),
-                        child: Text(
+                        child: const Text(
                           '식물이름',
                           style: TextStyle(fontSize: 11),
                         ),
@@ -240,7 +238,7 @@ class Sign_in_view extends State<Sign_in> {
                           border: Border.all(
                               color: const Color(0xFF81AE17), width: 2),
                         ),
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: const TextField(
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
@@ -259,23 +257,23 @@ class Sign_in_view extends State<Sign_in> {
           ),
         ),
         bottomNavigationBar: Container(
-          color: Color(0xfff2f2f2),
-          margin : EdgeInsets.only(bottom : 60),
+          color: const Color(0xfff2f2f2),
+          margin : const EdgeInsets.only(bottom : 60),
           child : BottomAppBar(
             elevation: 0,
-            color: Color(0xFFF2F2F2),
+            color: const Color(0xFFF2F2F2),
             child :ElevatedButton(
               onPressed: () {}, // 회원가입하기
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Color(0x8081AE17)), // 로그인 버튼의 색상
+                backgroundColor: MaterialStateProperty.all<Color>(const Color(0x8081AE17)), // 로그인 버튼의 색상
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0), // 버튼 테두리의 둥글기 정도 설정
                   ),
                 ),
-                fixedSize: MaterialStateProperty.all<Size>(Size.fromHeight(60)), // 높이 설정
+                fixedSize: MaterialStateProperty.all<Size>(const Size.fromHeight(60)), // 높이 설정
               ),
-              child: Text(
+              child: const Text(
                 '회원가입',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFF2F2F2)), // 로그인 버튼의 텍스트 색상
               ),
