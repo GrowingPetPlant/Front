@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'user.dart';
 String address="http://10.50.102.110:8080";
 class DBService {
-  //
+  //로그인
   Future<bool> login(User user) async {
     var url = Uri.parse(address+'/user/login');
     try {
