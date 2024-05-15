@@ -24,51 +24,6 @@ class My_page extends StatefulWidget {
 }
 
 class _My_page_view extends State<My_page> {
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _pwController = TextEditingController();
-  final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _plantTypeController = TextEditingController();
-  final TextEditingController _plantNameController = TextEditingController();
-
-  DBService dbService = DBService(); // DBService 인스턴스 생성
-
-
-  void _My_page() async {
-    String id = _idController.text;
-    String pw = _pwController.text;
-    String userName = _userNameController.text;
-    String phoneNumber = _phoneNumberController.text;
-    String plantType = _plantTypeController.text;
-    String plantName = _plantNameController.text;
-
-
-    //모두 입력했는지 확인
-    if (id.isEmpty || pw.isEmpty || userName.isEmpty || phoneNumber.isEmpty || plantType.isEmpty || plantName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('수정할내용을 입력하세요')),
-      );
-      return;
-    }
-
-    // 마이페이지 수정하기 시도
-    String? loginResult = await dbService.mypage(myPage(id: id, password : pw, userName: userName, phoneNumber: phoneNumber, plantName: plantName, plantType: plantType));
-
-    if (loginResult!=null && loginResult!="") {
-      // 비밀번호찾기 성공 시 팝업창에 비밀번호 띄우기
-      text = loginResult;
-      findPWDialog(context);
-    }
-    else if(loginResult==""){
-      text = "마이페이지를 수정할 수 없습니다";
-      findPWDialog(context);
-    }
-    else{
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('마이페이지 수정 실패')),
-      );
-    }
-  }
 
 
   @override
