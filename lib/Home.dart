@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mypetplant/calender.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -26,17 +27,25 @@ class Home extends StatelessWidget {
                       child: Align(
                         alignment: const Alignment(0, 0.4),
                         child: Container(
-                            padding: const EdgeInsets.all(13),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.white, width: 5),
                                 borderRadius: const BorderRadius.all(Radius.circular(15)),
                                 color: Colors.black45),
-                            child: const Text(
-                              '토마토',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
-                                color: Colors.white,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const calender()),
+                                );
+                              },
+                              child : Text(
+                                '토마토',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
                               ),
                             )
                         ),

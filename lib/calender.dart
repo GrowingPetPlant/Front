@@ -57,11 +57,20 @@ class calender extends StatefulWidget {
               onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
                 // 선택된 날짜의 상태를 갱신합니다.
                 setState((){
-                  format = CalendarFormat.week;
-                  this.selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                  background = 0xffffffff;
-                  foreground = 0xffffffff;
+                  if(selectedDay == this.selectedDay && focusedDay == _focusedDay) {
+                    format = CalendarFormat.month;
+                    this.selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    background = 0xffb3c458;
+                    foreground = 0xffdce4ae;
+                  }
+                  else{
+                    format = CalendarFormat.week;
+                    this.selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    background = 0xffffffff;
+                    foreground = 0xffffffff;
+                  }
                 });
               },
 
@@ -78,7 +87,8 @@ class calender extends StatefulWidget {
                 rightChevronVisible: true,
                 leftChevronMargin: EdgeInsets.only(left : 65),
                 rightChevronMargin: EdgeInsets.only(right: 65),
-                headerMargin: EdgeInsets.symmetric(vertical: 5)
+                headerMargin: EdgeInsets.symmetric(vertical: 5),
+
               ),
               calendarStyle: CalendarStyle(
                 markersAutoAligned: true,
