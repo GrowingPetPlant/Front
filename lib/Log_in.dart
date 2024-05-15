@@ -50,11 +50,11 @@ class _Log_inState extends State<Log_in> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
       body: Padding(
-        padding: EdgeInsets.all(screenWidth*0.04),
+        padding: EdgeInsets.all(screenHeight*0.04),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
