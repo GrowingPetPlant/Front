@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 class User {
   final String id;
   final String password;
@@ -40,3 +42,28 @@ class findPw {
     };
   }
 }
+
+class myPage{
+  final Long? userNumber;
+  final String id;
+  final String password;
+  final String userName;
+  final String phoneNumber;
+  final String plantType;
+  final String plantName;
+
+  myPage({this.userNumber, required this.id, required this.phoneNumber, required this.userName, required this.password, required this.plantName, required this.plantType});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userNumber': userNumber,
+      'name': userName,
+      'id' : id,
+      'phoneNumber' : phoneNumber,
+      'password' : password,
+      'plantName' : plantName,
+      'plantType' : plantType
+    };
+  }
+}
+

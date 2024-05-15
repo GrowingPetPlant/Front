@@ -41,6 +41,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http : ^0.13.3
+  table_calendar: ^3.0.6
+  intl: ^0.17.0
 
   flutter_lints: ^3.0.0
 # For information on the generic Dart part of this file, see the
@@ -64,6 +66,11 @@ flutter:
   - assets/images/lamp.png
   - assets/images/temp.png
   - assets/images/water.png
+  - assets/images/leftarrow.png
+  - assets/images/rightarrow.png
+  - assets/images/marker.png
+  - assets/images/home.png
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
