@@ -138,6 +138,67 @@ class DBService {
       return null;
     }
   }
+
+
+
+//회원가입
+  Future<bool> register(SignupRequest signupRequest) async {
+    var url = Uri.parse(address+'/user/signup'); // 회원가입 API URL
+    try {
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(signupRequest.toJson()),
+      );
+
+      //회원가입 응답 코드 확인
+      print('회원가입 응답 코드: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        // 회원가입 성공 처리
+        print('회원가입 성공: ${response.body}');
+        return true;
+      } else {
+        // 회원가입 실패 처리
+        print('회원가입 실패: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      // 네트워크 요청 중 에러
+      print('회원가입 중 오류: $e');
+      return false;
+    }
+  }
+
+// 아이디 중복 검사
+  Future<bool> checkIdAvailability(String id) async {
+    var url = Uri.parse(address+'/user/idCheck?id=$id');
+    try {
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        //body: jsonEncode({'id': id}), //아이디 정보를 함께 전송
+      );
+      if (response.statusCode == 200) {
+        // 사용 가능 아이디
+        print('사용 가능한 아이디: ${response.body}');
+        return true;
+      } else {
+        //사용 불가 아이디
+        print('사용 불가능한 아이디: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      // 네트워크 에러
+      print(e);
+      return false;
+    }
+  }
+
 }
 
 Future<UserInfo?> findUser(ID id) async {
@@ -199,61 +260,3 @@ Future<UserInfo_plant?> findUserPlant(UserInfo user) async {
   }
 }
 
-  //회원가입
-  Future<bool> register(UserInfo_plant signupRequest) async {
-    var url = Uri.parse(address+'/user/signup'); // 회원가입 API URL
-    try {
-      var response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(signupRequest.toJson()),
-      );
-
-      //회원가입 응답 코드 확인
-      print('회원가입 응답 코드: ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        // 회원가입 성공 처리
-        print('회원가입 성공: ${response.body}');
-        return true;
-      } else {
-        // 회원가입 실패 처리
-        print('회원가입 실패: ${response.body}');
-        return false;
-      }
-    } catch (e) {
-      // 네트워크 요청 중 에러
-      print('회원가입 중 오류: $e');
-      return false;
-    }
-  }
-
-  // 아이디 중복 검사
-  Future<bool> checkIdAvailability(String id) async {
-    var url = Uri.parse(address+'/user/idCheck?id=$id');
-    try {
-      var response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        //body: jsonEncode({'id': id}), //아이디 정보를 함께 전송
-      );
-      if (response.statusCode == 200) {
-        // 사용 가능 아이디
-        print('사용 가능한 아이디: ${response.body}');
-        return true;
-      } else {
-        //사용 불가 아이디
-        print('사용 불가능한 아이디: ${response.body}');
-        return false;
-      }
-    } catch (e) {
-      // 네트워크 에러
-      print(e);
-      return false;
-    }
-  }
-}
