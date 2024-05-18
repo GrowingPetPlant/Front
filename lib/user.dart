@@ -1,4 +1,3 @@
-
 import 'dart:ffi';
 
 class ID {
@@ -124,8 +123,8 @@ class UserInfo_plant {
       'password': password,
       'userName': userName,
       'phoneNumber': phoneNumber,
-      'plantType' : plantType,
-      'plantName' : plantName
+      'plantType': plantType,
+      'plantName': plantName,
     };
   }
 }
