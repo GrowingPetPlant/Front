@@ -4,7 +4,8 @@ import 'package:mypetplant/Home.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class calender extends StatefulWidget {
-  const calender({Key? key}) : super(key: key);
+  final String? id;
+  const calender({Key? key, this.id}) : super(key: key);
 
   State<calender> createState() => _CalendarState();
 }
@@ -161,11 +162,7 @@ class calender extends StatefulWidget {
         backgroundColor: Color(0xFF81AE17),
         shape: CircleBorder(),
         onPressed:(){
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const Home()),
-          );
+          Navigator.of(context).pop();
         }),
     );
   }

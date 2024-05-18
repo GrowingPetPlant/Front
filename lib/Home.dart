@@ -1,16 +1,31 @@
+import 'dart:ffi';
+import 'dart:ui' as ui;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypetplant/calender.dart';
+import 'package:mypetplant/mypage.dart';
+import 'package:mypetplant/user.dart';
+import 'package:mypetplant/user_service.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
 
+class Home extends StatefulWidget {
+  final String? id;
+
+  const Home({super.key, this.id});
+
+  @override
+  home createState() => home();
+}
+
+class home extends State<Home>{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Home',
         home: Scaffold(
             appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(0),
+              preferredSize: const ui.Size.fromHeight(0),
               child: AppBar(backgroundColor: const Color(0xff63dafe)),
             ),
             body: Stack(
@@ -36,7 +51,7 @@ class Home extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const calender()),
+                                      builder: (context) => calender(id: '${widget.id}',)),
                                 );
                               },
                               child : Text(
@@ -304,72 +319,104 @@ class Home extends StatelessWidget {
                         children: [
 
                           // 급수
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/water.png',
-                                width: 55,
-                                height: 55,
+                          IconButton(
+                            onPressed : (){},
+                            icon : Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/water.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
                               ),
                             ),
                           ),
 
+
+
                           // 조명
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/lamp.png',
-                                width: 55,
-                                height: 55,
+                          IconButton(
+                            onPressed : (){},
+                            icon : Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/lamp.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
                               ),
                             ),
                           ),
 
                           // 환풍
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/fan.png',
-                                width: 55,
-                                height: 55,
+                          IconButton(
+                            onPressed : (){},
+                            icon : Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/fan.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
                               ),
                             ),
                           ),
 
                           // 팁 확인
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: const BoxDecoration(
+                          IconButton(
+                            onPressed: () async {
+                              ID id;
+                              if(widget.id!=null)
+                                id = ID(id: widget.id);
+                              else
+                                id = ID(id : "");
+                              UserInfo? userInfo = await findUser(id);
+                              if (userInfo!=null){
+                                UserInfo_plant? userInfo_plant = await findUserPlant(userInfo);
+                                if(userInfo_plant!=null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            My_page(userInfo_plant: userInfo_plant)),
+                                  );
+                                }
+                              }
+                            },
+                            icon : Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/info.png',
-                                width: 55,
-                                height: 55,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/info.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       )
                   )

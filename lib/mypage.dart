@@ -1,15 +1,15 @@
 
+import 'dart:ui' as ui;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
-import 'package:mypetplant/Find_id.dart';
-import 'package:mypetplant/Find_pw.dart';
-import 'package:mypetplant/Sign_in.dart';
+import 'package:mypetplant/Home.dart';
+import 'package:mypetplant/Log_in.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
-import 'package:mypetplant/home.dart';
 
 String text="";
 
@@ -17,7 +17,8 @@ List<String> dropdownList = ['토마토', '바질', '수박'];
 String? selectedDropdown;
 
 class My_page extends StatefulWidget {
-  const My_page({super.key});
+  final UserInfo_plant? userInfo_plant;
+  const My_page({super.key, this.userInfo_plant});
 
   @override
   State<My_page> createState() => _My_page_view();
@@ -25,10 +26,99 @@ class My_page extends StatefulWidget {
 
 class _My_page_view extends State<My_page> {
 
+  late TextEditingController _idController;
+  late TextEditingController _passwordController;
+  late TextEditingController _nameController;
+  late TextEditingController _phoneNumberController;
+  late TextEditingController _plantNameController;
+  String plantType="";
+
+  DBService dbService = DBService(); // DBService 인스턴스 생성
+
+  void _logout() async{
+    String? logout = await dbService.logout();
+    if(logout!=null){
+      text="로그아웃 되었습니다";
+    }
+    else{
+      text="로그아웃 실패";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(text),),);
+  }
+
+  void _deleteUser(String id) async{
+    String? deleteUser = await dbService.deleteUser(id);
+    if(deleteUser!=null){
+      text="사용자 탈퇴가 완료되었습니다";
+    }
+    else{
+      text="사용자 탈퇴 실패";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(text),),);
+  }
+
+  void _mypage() async {
+    int userNumber = widget.userInfo_plant!.userNumber;
+    String id = widget.userInfo_plant!.id;
+    String password = _passwordController.text;
+    String name = _nameController.text;
+    String phoneNumber = _phoneNumberController.text;
+    String plantName = _plantNameController.text;
+
+    // 모두 입력했는지 확인
+    if (id.isEmpty || password.isEmpty || name.isEmpty || phoneNumber.isEmpty || plantName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('수정할 내용을 입력하세요')),
+      );
+      return;
+    }
+
+    // 로그인 시도
+    String? editResult = await dbService.mypage(UserInfo_plant(userNumber : userNumber, id: id, password: password, userName: name, phoneNumber: phoneNumber, plantName: plantName, plantType: plantType));
+
+    if (editResult != null) {
+      // 마이페이지 수정 성공 시 Home 화면으로 이동
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home(id: id)),
+      );
+    } else {
+      // 로그인 실패 시 사용자에게 알림
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('마이페이지 수정 실패')),
+      );
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _idController = TextEditingController(text:widget.userInfo_plant!.id);
+    _passwordController = TextEditingController(text:widget.userInfo_plant!.password);
+    _nameController = TextEditingController(text:widget.userInfo_plant!.userName);
+    _phoneNumberController = TextEditingController(text:widget.userInfo_plant!.phoneNumber);
+    _plantNameController = TextEditingController(text : widget.userInfo_plant!.plantName);
+    selectedDropdown = widget.userInfo_plant!.plantType;
+    plantType = widget.userInfo_plant!.plantType;
+  }
+
+  @override
+  void dispose() {
+    // 위젯이 dispose될 때 TextEditingController를 해제합니다.
+    _idController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    _phoneNumberController.dispose();
+    _plantNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
       body: Padding(
@@ -70,11 +160,14 @@ class _My_page_view extends State<My_page> {
                       Border.all(color: const Color(0xFF81AE17), width: 2),
                     ),
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: const TextField(style: TextStyle(fontSize: 13),
+                    child: TextField(
+                      controller: _idController,
+                      enabled: false,
+                      style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
-                          hintText: '',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          border: InputBorder.none),
+                          border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ],
@@ -98,13 +191,14 @@ class _My_page_view extends State<My_page> {
                       Border.all(color: const Color(0xFF81AE17), width: 2),
                     ),
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: const TextField(
+                    child: TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
-                          hintText: '',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          border: InputBorder.none),
+                          border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ],
@@ -128,12 +222,13 @@ class _My_page_view extends State<My_page> {
                       Border.all(color: const Color(0xFF81AE17), width: 2),
                     ),
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: const TextField(
+                    child: TextField(
+                      controller: _nameController,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
-                          hintText: '해삐',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          border: InputBorder.none),
+                          border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ],
@@ -157,10 +252,10 @@ class _My_page_view extends State<My_page> {
                       Border.all(color: const Color(0xFF81AE17), width: 2),
                     ),
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: const TextField(
+                    child: TextField(
+                      controller: _phoneNumberController,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
-                          hintText: '12345678',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           border: InputBorder.none),
                     ),
@@ -192,8 +287,9 @@ class _My_page_view extends State<My_page> {
                     }).toList(),
                     onChanged: (String? value) {
                       setState(() {
-                        selectedDropdown = value;
+                        selectedDropdown = value as String;
                       });
+                      plantType = value! ;
                     },
                     buttonStyleData: ButtonStyleData(
                       height: 50,
@@ -230,10 +326,10 @@ class _My_page_view extends State<My_page> {
                       Border.all(color: const Color(0xFF81AE17), width: 2),
                     ),
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: const TextField(
+                    child: TextField(
+                      controller: _plantNameController,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
-                          hintText: '바질이',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           border: InputBorder.none),
                     ),
@@ -255,7 +351,9 @@ class _My_page_view extends State<My_page> {
                 elevation: 0,
                 color: const Color(0xFFF2F2F2),
                 child : ElevatedButton(
-                  onPressed: () {}, // 수정하기
+                  onPressed: () {
+                    _mypage();
+                  }, // 수정하기
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(const Color(0x8081AE17)), // 로그인 버튼의 색상
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -263,7 +361,7 @@ class _My_page_view extends State<My_page> {
                         borderRadius: BorderRadius.circular(10.0), // 버튼 테두리의 둥글기 정도 설정
                       ),
                     ),
-                    fixedSize: MaterialStateProperty.all<Size>(const Size.fromHeight(60)), // 높이 설정
+                    fixedSize: MaterialStateProperty.all<ui.Size>(const ui.Size.fromHeight(60)), // 높이 설정
                   ),
                   child: const Text(
                     '수정하기',
@@ -275,7 +373,13 @@ class _My_page_view extends State<My_page> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _logout();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => const Log_in()));
+                      },
                     child: const Text(
                       '로그아웃',
                       style: TextStyle(fontSize: 14, color: Color(0xFF515151)),
@@ -287,7 +391,13 @@ class _My_page_view extends State<My_page> {
                     color: const Color(0xffc0c0c0),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _deleteUser(widget.userInfo_plant!.id);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Log_in()));
+                    },
                     child: const Text(
                       '탈퇴하기',
                       style: TextStyle(fontSize: 14, color: Color(0xFF515151)
@@ -299,7 +409,6 @@ class _My_page_view extends State<My_page> {
             ]
           ),
         )
-
     );
   }
 }
