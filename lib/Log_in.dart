@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:mypetplant/Find_id.dart';
 import 'package:mypetplant/Find_pw.dart';
+import 'package:mypetplant/Home.dart';
 import 'package:mypetplant/Sign_in.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
-import 'package:mypetplant/home.dart';
 
 class Log_in extends StatefulWidget {
   const Log_in({super.key});
 
   @override
   _Log_inState createState() => _Log_inState();
+
 }
 
 class _Log_inState extends State<Log_in> {
@@ -32,13 +33,13 @@ class _Log_inState extends State<Log_in> {
     }
 
     // 로그인 시도
-    bool loginResult = await dbService.login(User(id: id, password: password));
+    String? loginResult = await dbService.login(User(id: id, password: password));
 
-    if (loginResult) {
+    if (loginResult != null) {
       // 로그인 성공 시 Home 화면으로 이동
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Home()),
+        MaterialPageRoute(builder: (context) => Home(id: loginResult)),
       );
     } else {
       // 로그인 실패 시 사용자에게 알림
