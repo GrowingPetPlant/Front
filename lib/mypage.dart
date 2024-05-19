@@ -32,6 +32,10 @@ class _My_page_view extends State<My_page> {
   late TextEditingController _phoneNumberController;
   late TextEditingController _plantNameController;
   String plantType="";
+  String validPassword = "";
+  String validName = "";
+  String validPhoneNumber = "";
+  String validPlantName = "";
 
   DBService dbService = DBService(); // DBService 인스턴스 생성
 
@@ -90,6 +94,65 @@ class _My_page_view extends State<My_page> {
         const SnackBar(content: Text('마이페이지 수정 실패')),
       );
     }
+  }
+
+  String _validatePasswordLogic(String value){
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력해주세요.';
+    }else if(value.length < 8 || value.length >16){
+      return "비밀번호를 8~16자리로 입력해주세요";
+    } else if (!RegExp(
+        r'^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]*$').hasMatch(value)){
+      return '비밀번호는 소문자, 숫자, 특수문자를 모두 포함해야합니다';
+    } else
+      return "";
+  }
+
+  void _validatePassword(String value){
+    setState(() {
+      validPassword = _validatePasswordLogic(value);
+    });
+  }
+
+  String _validateUserNameLogic(String value) {
+    if (value == null || value.isEmpty) {
+      return '이름을 입력해주세요.';
+    }
+    return "";
+  }
+
+  void _validateUserName(String value){
+    setState(() {
+      validName = _validateUserNameLogic(value);
+    });
+  }
+
+  String _validatePhoneNumberLogic(String value) {
+    if (value == null || value.isEmpty) {
+      return '전화번호를 입력해주세요.';
+    } else if (!RegExp(r'^\d{3}-\d{4}-\d{4}$').hasMatch(value)) {
+      return '전화번호 형식은 000-0000-0000으로 입력해주세요.';
+    }
+    return "";
+  }
+
+  void _validatePhoneNumber(String value){
+    setState(() {
+      validPhoneNumber = _validatePhoneNumberLogic(value);
+    });
+  }
+
+  String _validatePlantNameLogic(String value) {
+    if (value == null || value.isEmpty) {
+      return '식물이름을 입력해주세요.';
+    }
+    return "";
+  }
+
+  void _validatePlantName(String value){
+    setState(() {
+      validPlantName = _validatePlantNameLogic(value);
+    });
   }
 
   @override
@@ -175,12 +238,23 @@ class _My_page_view extends State<My_page> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenHeight * 0.01),
-                    child: const Text(
-                      '비밀번호',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight * 0.01),
+                        child: const Text(
+                          '비밀번호',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                        child: Text(
+                          validPassword,
+                          style: TextStyle(fontSize: 11, color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -194,6 +268,7 @@ class _My_page_view extends State<My_page> {
                     child: TextField(
                       controller: _passwordController,
                       obscureText: true,
+                      onChanged: _validatePassword,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -206,12 +281,23 @@ class _My_page_view extends State<My_page> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenHeight * 0.01),
-                    child: const Text(
-                      '이름',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight * 0.01),
+                        child: const Text(
+                          '이름',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                        child: Text(
+                          validName,
+                          style: TextStyle(fontSize: 11, color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -224,6 +310,7 @@ class _My_page_view extends State<My_page> {
                     padding: const EdgeInsets.only(bottom: 10),
                     child: TextField(
                       controller: _nameController,
+                      onChanged: _validateUserName,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -236,12 +323,23 @@ class _My_page_view extends State<My_page> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenHeight * 0.01),
-                    child: const Text(
-                      '전화번호',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight * 0.01),
+                        child: const Text(
+                          '전화번호',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                        child: Text(
+                          validPhoneNumber,
+                          style: TextStyle(fontSize: 11, color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -254,6 +352,7 @@ class _My_page_view extends State<My_page> {
                     padding: const EdgeInsets.only(bottom: 10),
                     child: TextField(
                       controller: _phoneNumberController,
+                      onChanged: _validatePhoneNumber,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -310,12 +409,23 @@ class _My_page_view extends State<My_page> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenHeight * 0.01),
-                    child: const Text(
-                      '식물이름',
-                      style: TextStyle(fontSize: 11),
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(screenHeight * 0.01),
+                        child: const Text(
+                          '식물이름',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                        child: Text(
+                          validPlantName,
+                          style: TextStyle(fontSize: 11, color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -328,6 +438,7 @@ class _My_page_view extends State<My_page> {
                     padding: const EdgeInsets.only(bottom: 10),
                     child: TextField(
                       controller: _plantNameController,
+                      onChanged: _validatePlantName,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
