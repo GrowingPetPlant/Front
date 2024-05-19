@@ -30,7 +30,7 @@ class DBService {
 
   //아이디 찾기
   Future<String?> find_Id(findId find_id) async {
-    var url = Uri.parse('http://localhost:8080/user/findId');
+    var url = Uri.parse(address + '/user/findId');
     try {
       var response = await http.post(
         url,
@@ -54,7 +54,7 @@ class DBService {
 
   //비밀번호 찾기
   Future<String?> find_pw(findPw find_pw) async {
-    var url = Uri.parse('http://localhost:8080/user/findPwd');
+    var url = Uri.parse(address + '/user/findPwd');
     try {
       var response = await http.post(
         url,
