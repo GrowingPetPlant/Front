@@ -21,6 +21,11 @@ class Sign_in_view extends State<Sign_in> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _plantNameController = TextEditingController();
+  String validId = "";
+  String validPassword = "";
+  String validName = "";
+  String validPhoneNumber = "";
+  String validPlantName = "";
 
   DBService dbService = DBService(); // DBService 인스턴스 생성
 
@@ -93,18 +98,24 @@ class Sign_in_view extends State<Sign_in> {
     }
   }
 
-  String? _validateId(String? value) {
+  String _validateIdLogic(String value) {
     if (value == null || value.isEmpty) {
       return '아이디를 입력해주세요.';
     } else if (value.length < 3 || value.length > 10) {
       return '아이디를 3~10자리로 입력해주세요.';
     } else if (!RegExp(r'^(?=.*[a-z])[a-zA-Z0-9]*$').hasMatch(value)) {
       return '아이디는 영문자와 숫자로 입력해주세요.';
-    }
-    return null;
+    } else
+      return "";
   }
 
-  String? _validatePassword(String? value) {
+  void _validateId(String value){
+    setState(() {
+      validId = _validateIdLogic(value);
+    });
+  }
+
+  String _validatePasswordLogic(String value) {
     if (value == null || value.isEmpty) {
       return '비밀번호를 입력해주세요.';
     } else if (value.length < 8 || value.length > 16) {
@@ -113,24 +124,67 @@ class Sign_in_view extends State<Sign_in> {
             r'^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]*$')
         .hasMatch(value)) {
       return '비밀번호는 소문자, 숫자, 특수문자를 모두 포함해야 합니다.';
-    }
-    return null;
+    }else
+      return "";
   }
 
-  String? _validateUserName(String? value) {
+  void _validatePassword(String value){
+    setState(() {
+      validPassword = _validatePasswordLogic(value);
+    });
+  }
+
+  String _validateUserNameLogic(String value) {
     if (value == null || value.isEmpty) {
       return '이름을 입력해주세요.';
-    }
-    return null;
+    }else
+      return "";
   }
 
-  String? _validatePhoneNumber(String? value) {
+  void _validateUserName(String value){
+    setState(() {
+      validName = _validateUserNameLogic(value);
+    });
+  }
+
+
+  String _validatePhoneNumberLogic(String value) {
     if (value == null || value.isEmpty) {
       return '전화번호를 입력해주세요.';
     } else if (!RegExp(r'^\d{3}-\d{4}-\d{4}$').hasMatch(value)) {
       return '전화번호 형식은 000-0000-0000으로 입력해주세요.';
+    } else
+      return "";
+  }
+
+  void _validatePhoneNumber(String value){
+    setState(() {
+      validPhoneNumber = _validatePhoneNumberLogic(value);
+    });
+  }
+
+  String _validatePlantNameLogic(String value) {
+    if (value == null || value.isEmpty) {
+      return '식물이름을 입력해주세요.';
     }
-    return null;
+    return "";
+  }
+
+  void _validatePlantName(String value){
+    setState(() {
+      validPlantName = _validatePlantNameLogic(value);
+    });
+  }
+
+  @override
+  void dispose() {
+    // 위젯이 dispose될 때 TextEditingController를 해제합니다.
+    _idController.dispose();
+    _passwordController.dispose();
+    _userNameController.dispose();
+    _phoneNumberController.dispose();
+    _plantNameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -141,10 +195,7 @@ class Sign_in_view extends State<Sign_in> {
       body: Padding(
         padding: EdgeInsets.all(screenHeight * 0.04),
         child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
+          child: Column(
               children: [
                 SizedBox(
                   height: screenHeight * 0.15,
@@ -166,12 +217,23 @@ class Sign_in_view extends State<Sign_in> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '아이디',
-                        style: TextStyle(fontSize: 11),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(screenHeight * 0.01),
+                          child: const Text(
+                            '아이디',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                          child: Text(
+                            validId,
+                            style: TextStyle(fontSize: 11, color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       height: 50,
@@ -181,37 +243,39 @@ class Sign_in_view extends State<Sign_in> {
                             color: const Color(0xFF81AE17), width: 2),
                       ),
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: TextFormField(
+                      child: TextField(
                         controller: _idController,
+                        onChanged: _validateId,
                         style: TextStyle(fontSize: 13),
                         decoration: InputDecoration(
                           hintText: '아이디를 입력해주세요',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           border: InputBorder.none,
                         ),
-                        validator: _validateId,
                       ),
                     ),
-                    if (_idController.text.isNotEmpty &&
-                        _validateId(_idController.text) != null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(
-                          _validateId(_idController.text) ?? '',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '비밀번호',
-                        style: TextStyle(fontSize: 11),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(screenHeight * 0.01),
+                          child: const Text(
+                            '비밀번호',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                          child: Text(
+                            validPassword,
+                            style: TextStyle(fontSize: 11, color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       alignment: Alignment.center,
@@ -222,37 +286,40 @@ class Sign_in_view extends State<Sign_in> {
                             color: const Color(0xFF81AE17), width: 2),
                       ),
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: TextFormField(
+                      child: TextField(
                         controller: _passwordController,
+                        obscureText: true,
+                        onChanged: _validatePassword,
                         style: TextStyle(fontSize: 13),
                         decoration: InputDecoration(
                           hintText: '비밀번호를 입력해주세요',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           border: InputBorder.none,
                         ),
-                        validator: _validatePassword,
                       ),
                     ),
-                    if (_passwordController.text.isNotEmpty &&
-                        _validatePassword(_passwordController.text) != null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(
-                          _validatePassword(_passwordController.text) ?? '',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '이름',
-                        style: TextStyle(fontSize: 11),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(screenHeight * 0.01),
+                          child: const Text(
+                            '이름',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                          child: Text(
+                            validName,
+                            style: TextStyle(fontSize: 11, color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       alignment: Alignment.center,
@@ -263,37 +330,39 @@ class Sign_in_view extends State<Sign_in> {
                             color: const Color(0xFF81AE17), width: 2),
                       ),
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: TextFormField(
+                      child: TextField(
                         controller: _userNameController,
+                        onChanged: _validateUserName,
                         style: TextStyle(fontSize: 13),
                         decoration: InputDecoration(
                           hintText: '사용자 이름',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           border: InputBorder.none,
                         ),
-                        validator: _validateUserName,
                       ),
                     ),
-                    if (_userNameController.text.isNotEmpty &&
-                        _validateUserName(_userNameController.text) != null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(
-                          _validateUserName(_userNameController.text) ?? '',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '전화번호',
-                        style: TextStyle(fontSize: 11),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(screenHeight * 0.01),
+                          child: const Text(
+                            '전화번호',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                          child: Text(
+                            validPhoneNumber,
+                            style: TextStyle(fontSize: 11, color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       alignment: Alignment.center,
@@ -306,26 +375,15 @@ class Sign_in_view extends State<Sign_in> {
                       padding: const EdgeInsets.only(bottom: 10),
                       child: TextFormField(
                         controller: _phoneNumberController,
+                        onChanged: _validatePhoneNumber,
                         style: TextStyle(fontSize: 13),
                         decoration: InputDecoration(
                           hintText: '전화번호를 입력해주세요',
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           border: InputBorder.none,
                         ),
-                        validator: _validatePhoneNumber,
                       ),
                     ),
-                    if (_phoneNumberController.text.isNotEmpty &&
-                        _validatePhoneNumber(_phoneNumberController.text) !=
-                            null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(
-                          _validatePhoneNumber(_phoneNumberController.text) ??
-                              '',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
                   ],
                 ),
                 Column(
@@ -377,12 +435,23 @@ class Sign_in_view extends State<Sign_in> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '식물이름',
-                        style: TextStyle(fontSize: 11),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(screenHeight * 0.01),
+                          child: const Text(
+                            '식물이름',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                          child: Text(
+                            validPlantName,
+                            style: TextStyle(fontSize: 11, color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       alignment: Alignment.center,
@@ -393,8 +462,9 @@ class Sign_in_view extends State<Sign_in> {
                             color: const Color(0xFF81AE17), width: 2),
                       ),
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: TextFormField(
+                      child: TextField(
                         controller: _plantNameController,
+                        onChanged: _validatePlantName,
                         style: TextStyle(fontSize: 13),
                         decoration: InputDecoration(
                           hintText: '식물 이름을 지어주세요',
@@ -409,7 +479,7 @@ class Sign_in_view extends State<Sign_in> {
             ),
           ),
         ),
-      ),
+
       //로그인 버튼
       bottomNavigationBar: Container(
         color: const Color(0xfff2f2f2),

@@ -204,7 +204,8 @@ class _My_page_view extends State<My_page> {
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF56280F))),
                     ],
-                  )),
+                  )
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
