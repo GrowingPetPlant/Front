@@ -1,11 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
-String address="http://172.20.10.11:8080";
+
+String address = "http://172.20.10.11:8080";
+
 class DBService {
   //
   Future<String?> login(User user) async {
-    var url = Uri.parse(address + '/user/login'); 
+    var url = Uri.parse('http://localhost:8080/user/login');
     try {
       var response = await http.post(
         url,
@@ -30,7 +32,7 @@ class DBService {
 
   //아이디 찾기
   Future<String?> find_Id(findId find_id) async {
-    var url = Uri.parse(address + '/user/findId');
+    var url = Uri.parse('http://localhost:8080/user/findId');
     try {
       var response = await http.post(
         url,
@@ -54,7 +56,7 @@ class DBService {
 
   //비밀번호 찾기
   Future<String?> find_pw(findPw find_pw) async {
-    var url = Uri.parse(address + '/user/findPwd');
+    var url = Uri.parse('http://localhost:8080/user/findPwd');
     try {
       var response = await http.post(
         url,
@@ -77,7 +79,7 @@ class DBService {
   }
 
   Future<String?> mypage(UserInfo_plant userInfo_plant) async {
-    var url = Uri.parse(address + '/user/mypage');
+    var url = Uri.parse('http://localhost:8080/user/mypage');
     try {
       var response = await http.patch(
         url,
@@ -101,7 +103,7 @@ class DBService {
   }
 
   Future<String?> logout() async {
-    var url = Uri.parse(address + '/user/logout');
+    var url = Uri.parse('http://localhost:8080/user/logout');
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -118,7 +120,7 @@ class DBService {
   }
 
   Future<String?> deleteUser(String id) async {
-    var url = Uri.parse(address + '/user/delete/'+id);
+    var url = Uri.parse('http://localhost:8080/user/delete/' + id);
     try {
       var response = await http.delete(
         url,
@@ -139,11 +141,9 @@ class DBService {
     }
   }
 
-
-
 //회원가입
   Future<bool> register(SignupRequest signupRequest) async {
-    var url = Uri.parse(address+'/user/signup'); // 회원가입 API URL
+    var url = Uri.parse('http://localhost:8080/user/signup'); // 회원가입 API URL
     try {
       var response = await http.post(
         url,
@@ -174,7 +174,7 @@ class DBService {
 
 // 아이디 중복 검사
   Future<bool> checkIdAvailability(String id) async {
-    var url = Uri.parse(address+'/user/idCheck?id=$id');
+    var url = Uri.parse('http://localhost:8080/user/idCheck?id=$id');
     try {
       var response = await http.post(
         url,
@@ -198,7 +198,6 @@ class DBService {
       return false;
     }
   }
-
 }
 
 Future<UserInfo?> findUser(ID id) async {
@@ -227,7 +226,9 @@ Future<UserInfo?> findUser(ID id) async {
 }
 
 Future<UserInfo_plant?> findUserPlant(UserInfo user) async {
-  var url = Uri.parse(address + '/userplant/findUserPlant' + '?userNumber=' +
+  var url = Uri.parse(address +
+      '/userplant/findUserPlant' +
+      '?userNumber=' +
       user.userNumber.toString());
   try {
     var response = await http.get(
@@ -259,4 +260,3 @@ Future<UserInfo_plant?> findUserPlant(UserInfo user) async {
     return null;
   }
 }
-
