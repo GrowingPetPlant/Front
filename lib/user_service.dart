@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
-String address="http://172.30.1.78:8080";
+String address="http://172.20.10.11:8080";
 class DBService {
   //
   Future<String?> login(User user) async {

@@ -15,7 +15,6 @@ class Sign_in extends StatefulWidget {
 }
 
 class Sign_in_view extends State<Sign_in> {
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
@@ -40,7 +39,6 @@ class Sign_in_view extends State<Sign_in> {
   }
 
   Future<void> _signUp() async {
-    if (_formKey.currentState!.validate()) {
       //모든 입력값이 유효한지 확인하고 유효하지 않은 경우 회원가입 처리 중지하기
       try {
         // 아이디 중복 여부 확인
@@ -95,7 +93,7 @@ class Sign_in_view extends State<Sign_in> {
           ),
         );
       }
-    }
+
   }
 
   String _validateIdLogic(String value) {
