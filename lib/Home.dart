@@ -1,5 +1,7 @@
 import 'dart:ffi';
 import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:mypetplant/mypage.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 
+//백그라운드 -> 포그라운드 : resume
 
 class Home extends StatefulWidget {
   final String? id;
@@ -18,7 +21,71 @@ class Home extends StatefulWidget {
   home createState() => home();
 }
 
-class home extends State<Home>{
+class home extends State<Home> with WidgetsBindingObserver {
+  String _backgroundImage = 'assets/images/home-day.png'; //기본 이미지
+  Color _appBarColor = Color(0xff63dafe); //기본 appbar 색상
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // 옵저버 추가
+    _updateBackgroundImage(); //앱 시작 시 배경 이미지 업데이트
+    _setNextUpdate();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); //타이머 해제
+    WidgetsBinding.instance.removeObserver(this); // 옵저버 제거
+    super.dispose();
+  }
+
+  // 앱 생명 주기 상태 변화 감지
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // 앱이 포그라운드로 돌아왔을 때 실행할 작업
+      _updateBackgroundImage(); //배경이미지 업데이트
+      _setNextUpdate(); //다음 업데이트 설정
+    }
+  }
+
+  void _updateBackgroundImage() {
+    final now = DateTime.now();
+    //final now = DateTime(2024, 5, 20, 21);    //test용
+    final isNight = now.hour >= 19 || now.hour < 6;
+    final newBackgroundImage =
+        isNight ? 'assets/images/home-night.png' : 'assets/images/home-day.png';
+    final newAppBarColor = isNight ? Color(0xEA0F0488) : Color(0xff63dafe);
+
+    setState(() {
+      _backgroundImage = newBackgroundImage;
+      _appBarColor = newAppBarColor;
+    });
+  }
+
+  void _setNextUpdate() {
+    final now = DateTime.now();
+    DateTime nextUpdate;
+
+    if (now.hour >= 19) {
+      nextUpdate = DateTime(now.year, now.month, now.day)
+          .add(Duration(days: 1, hours: 6 - now.hour));
+    } else if (now.hour < 6) {
+      nextUpdate = DateTime(now.year, now.month, now.day, 6);
+    } else {
+      nextUpdate = DateTime(now.year, now.month, now.day, 19);
+    }
+
+    final duration = nextUpdate.difference(now);
+    _timer = Timer(duration, () {
+      _updateBackgroundImage();
+      _setNextUpdate();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,403 +93,389 @@ class home extends State<Home>{
         home: Scaffold(
             appBar: PreferredSize(
               preferredSize: const ui.Size.fromHeight(0),
-              child: AppBar(backgroundColor: const Color(0xff63dafe)),
+              child: AppBar(backgroundColor: _appBarColor),
             ),
-            body: Stack(
-                children: <Widget>[
+            body: Stack(children: <Widget>[
+              // 배경이미지
+              Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(_backgroundImage),
+                          fit: BoxFit.cover)),
 
-                  // 배경이미지
-                  Container(
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/home-day.png'),
-                              fit: BoxFit.cover)),
+                  // 닉네임
+                  child: Align(
+                    alignment: const Alignment(0, 0.4),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 5),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            color: Colors.black45),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => calender(
+                                        id: '${widget.id}',
+                                      )),
+                            );
+                          },
+                          child: Text(
+                            '토마토',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
+                  )),
 
-                      // 닉네임
-                      child: Align(
-                        alignment: const Alignment(0, 0.4),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white, width: 5),
-                                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                                color: Colors.black45),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => calender(id: '${widget.id}',)),
-                                );
-                              },
-                              child : Text(
-                                '토마토',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                ),
+              // 상태바
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      // 온도
+                      SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                // 온도이미지
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/temp.png'),
+                                        fit: BoxFit.cover)),
                               ),
-                            )
-                        ),
-                      )
-                  ),
-
-
-                  // 상태바
-                  Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-
-                          // 온도
-                          SizedBox(
-                              width: 250,
-                              height: 50,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container( // 온도이미지
-                                    width: 50,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage('assets/images/temp.png'),
-                                            fit: BoxFit.cover
-                                        )
-                                    ),
-                                  ),
-                                  Container(
-                                      padding: const EdgeInsets.all(3),
-                                      child: Align(
-                                        child: Stack(
-                                          children: [
-                                            // 흰색 테두리 효과를 위한 텍스트
-                                            Text(
-                                              '20°C',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
-                                                foreground: Paint()
-                                                  ..style = PaintingStyle.stroke
-                                                  ..strokeWidth = 3
-                                                  ..color = Colors.white, // 흰색 텍스트 스트로크
-                                                shadows: const [
-                                                  Shadow(
-                                                    blurRadius: 2,
-                                                    color: Colors.white, // 흰색 테두리
-                                                  ),
-                                                ],
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            // 원래의 검정색 텍스트
-                                            const Text(
-                                              '20°C',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
-                                                color: Colors.black, // 검정색 텍스트
-                                              ),
-                                              textAlign: TextAlign.left,
+                              Container(
+                                padding: const EdgeInsets.all(3),
+                                child: Align(
+                                  child: Stack(
+                                    children: [
+                                      // 흰색 테두리 효과를 위한 텍스트
+                                      Text(
+                                        '20°C',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          foreground: Paint()
+                                            ..style = PaintingStyle.stroke
+                                            ..strokeWidth = 3
+                                            ..color =
+                                                Colors.white, // 흰색 텍스트 스트로크
+                                          shadows: const [
+                                            Shadow(
+                                              blurRadius: 2,
+                                              color: Colors.white, // 흰색 테두리
                                             ),
                                           ],
+                                        ),
+                                        textAlign: TextAlign.left,
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
-
-                          // 습도
-                          SizedBox(
-                              width: 250,
-                              height: 50,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage('assets/images/humi.png'),
-                                            fit: BoxFit.cover
-                                        )
-                                    ),
-                                  ),
-                                  Container(
-                                      padding: const EdgeInsets.all(3),
-                                      child: Align(child: Stack(
-                                        children: [
-                                          // 흰색 테두리 효과를 위한 텍스트
-                                          Text(
-                                            '30%',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              foreground: Paint()
-                                                ..style = PaintingStyle.stroke
-                                                ..strokeWidth = 3
-                                                ..color = Colors.white, // 흰색 텍스트 스트로크
-                                              shadows: const [
-                                                Shadow(
-                                                  blurRadius: 2,
-                                                  color: Colors.white, // 흰색 테두리
-                                                ),
-                                              ],
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          // 원래의 검정색 텍스트
-                                          const Text(
-                                            '30%',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              color: Colors.black, // 검정색 텍스트
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ],
+                                      // 원래의 검정색 텍스트
+                                      const Text(
+                                        '20°C',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.black, // 검정색 텍스트
+                                        ),
+                                        textAlign: TextAlign.left,
                                       ),
-                                      )
+                                    ],
                                   ),
-                                ],
-                              )
-                          ),
-
-                          // 비옥도
-                          SizedBox(
-                              width: 250,
-                              height: 50,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage('assets/images/soil.png'),
-                                            fit: BoxFit.cover
-                                        )
-                                    ),
-                                  ),
-                                  Container(
-                                      padding: const EdgeInsets.all(3),
-                                      child: Align(child: Stack(
-                                        children: [
-                                          // 흰색 테두리 효과를 위한 텍스트
-                                          Text(
-                                            '50%',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              foreground: Paint()
-                                                ..style = PaintingStyle.stroke
-                                                ..strokeWidth = 3
-                                                ..color = Colors.white, // 흰색 텍스트 스트로크
-                                              shadows: const [
-                                                Shadow(
-                                                  blurRadius: 2,
-                                                  color: Colors.white, // 흰색 테두리
-                                                ),
-                                              ],
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          // 원래의 검정색 텍스트
-                                          const Text(
-                                            '50%',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              color: Colors.black, // 검정색 텍스트
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ],
-                                      ),
-                                      )
-                                  ),
-                                ],
-                              )
-                          ),
-
-                          // D-day
-                          SizedBox(
-                              width: 250,
-                              height: 50,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage('assets/images/d-day.png'),
-                                            fit: BoxFit.cover
-                                        )
-                                    ),
-                                  ),
-                                  Container(
-                                      padding: const EdgeInsets.all(3),
-                                      child: Align(child: Stack(
-                                        children: [
-                                          // 흰색 테두리 효과를 위한 텍스트
-                                          Text(
-                                            '30%',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              foreground: Paint()
-                                                ..style = PaintingStyle.stroke
-                                                ..strokeWidth = 3
-                                                ..color = Colors.white, // 흰색 텍스트 스트로크
-                                              shadows: const [
-                                                Shadow(
-                                                  blurRadius: 2,
-                                                  color: Colors.white, // 흰색 테두리
-                                                ),
-                                              ],
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          // 원래의 검정색 텍스트
-                                          const Text(
-                                            '30%',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              color: Colors.black, // 검정색 텍스트
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ],
-                                      ),
-                                      )
-                                  ),
-                                ],
-                              )
-                          ),
-
-                        ],
-                      )
-                  ),
-
-                  // 제어 dock
-                  Container(
-                      alignment: const Alignment(0, 0.9),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-
-                          // 급수
-                          IconButton(
-                            onPressed : (){},
-                            icon : Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/water.png',
-                                  width: 55,
-                                  height: 55,
                                 ),
                               ),
+                            ],
+                          )),
+
+                      // 습도
+                      SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/humi.png'),
+                                        fit: BoxFit.cover)),
+                              ),
+                              Container(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Align(
+                                    child: Stack(
+                                      children: [
+                                        // 흰색 테두리 효과를 위한 텍스트
+                                        Text(
+                                          '30%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 3
+                                              ..color =
+                                                  Colors.white, // 흰색 텍스트 스트로크
+                                            shadows: const [
+                                              Shadow(
+                                                blurRadius: 2,
+                                                color: Colors.white, // 흰색 테두리
+                                              ),
+                                            ],
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        // 원래의 검정색 텍스트
+                                        const Text(
+                                          '30%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.black, // 검정색 텍스트
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          )),
+
+                      // 비옥도
+                      SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/soil.png'),
+                                        fit: BoxFit.cover)),
+                              ),
+                              Container(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Align(
+                                    child: Stack(
+                                      children: [
+                                        // 흰색 테두리 효과를 위한 텍스트
+                                        Text(
+                                          '50%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 3
+                                              ..color =
+                                                  Colors.white, // 흰색 텍스트 스트로크
+                                            shadows: const [
+                                              Shadow(
+                                                blurRadius: 2,
+                                                color: Colors.white, // 흰색 테두리
+                                              ),
+                                            ],
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        // 원래의 검정색 텍스트
+                                        const Text(
+                                          '50%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.black, // 검정색 텍스트
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          )),
+
+                      // D-day
+                      SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/d-day.png'),
+                                        fit: BoxFit.cover)),
+                              ),
+                              Container(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Align(
+                                    child: Stack(
+                                      children: [
+                                        // 흰색 테두리 효과를 위한 텍스트
+                                        Text(
+                                          '30%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 3
+                                              ..color =
+                                                  Colors.white, // 흰색 텍스트 스트로크
+                                            shadows: const [
+                                              Shadow(
+                                                blurRadius: 2,
+                                                color: Colors.white, // 흰색 테두리
+                                              ),
+                                            ],
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        // 원래의 검정색 텍스트
+                                        const Text(
+                                          '30%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.black, // 검정색 텍스트
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          )),
+                    ],
+                  )),
+
+              // 제어 dock
+              Container(
+                  alignment: const Alignment(0, 0.9),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // 급수
+                      IconButton(
+                        onPressed: () {},
+                        icon: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/water.png',
+                              width: 55,
+                              height: 55,
                             ),
                           ),
+                        ),
+                      ),
 
-
-
-                          // 조명
-                          IconButton(
-                            onPressed : (){},
-                            icon : Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/lamp.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
+                      // 조명
+                      IconButton(
+                        onPressed: () {},
+                        icon: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/lamp.png',
+                              width: 55,
+                              height: 55,
                             ),
                           ),
+                        ),
+                      ),
 
-                          // 환풍
-                          IconButton(
-                            onPressed : (){},
-                            icon : Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/fan.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
+                      // 환풍
+                      IconButton(
+                        onPressed: () {},
+                        icon: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/fan.png',
+                              width: 55,
+                              height: 55,
                             ),
                           ),
+                        ),
+                      ),
 
-                          // 팁 확인
-                          IconButton(
-                            onPressed: () async {
-                              ID id;
-                              if(widget.id!=null)
-                                id = ID(id: widget.id);
-                              else
-                                id = ID(id : "");
-                              UserInfo? userInfo = await findUser(id);
-                              if (userInfo!=null){
-                                UserInfo_plant? userInfo_plant = await findUserPlant(userInfo);
-                                if(userInfo_plant!=null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            My_page(userInfo_plant: userInfo_plant)),
-                                  );
-                                }
-                              }
-                            },
-                            icon : Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/info.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
+                      // 팁 확인
+                      IconButton(
+                        onPressed: () async {
+                          ID id;
+                          if (widget.id != null)
+                            id = ID(id: widget.id);
+                          else
+                            id = ID(id: "");
+                          UserInfo? userInfo = await findUser(id);
+                          if (userInfo != null) {
+                            UserInfo_plant? userInfo_plant =
+                                await findUserPlant(userInfo);
+                            if (userInfo_plant != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => My_page(
+                                        userInfo_plant: userInfo_plant)),
+                              );
+                            }
+                          }
+                        },
+                        icon: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/info.png',
+                              width: 55,
+                              height: 55,
                             ),
                           ),
-                        ],
-                      )
-                  )
-                ]
-            )
-        )
-    );
+                        ),
+                      ),
+                    ],
+                  )),
+            ])));
   }
 }
