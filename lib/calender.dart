@@ -12,8 +12,8 @@ class calender extends StatefulWidget {
   class _CalendarState extends State<calender>{
 
     Map<DateTime, List<event>> water = {
-      DateTime.utc(2024,5,12) : [ event('02:14:38'), event('10:45:52'), event('101030') ],
-      DateTime.utc(2024,7,14) : [ event('21:08:12') ],
+      DateTime.utc(2024,5,12) : [ event(''), event(''), event('') ],
+      DateTime.utc(2024,7,14) : [ event('') ],
     };
 
     List<event> _getEventsForDay(DateTime day) {
@@ -31,7 +31,7 @@ class calender extends StatefulWidget {
   int background = 0xffb3c458;
   int foreground = 0xffdce4ae;
   double horizontalPadding = 10;
-  var _focusedDay = DateTime.now();
+  var _focusedDay = DateTime.now(); //focusedDay에 할당할 날짜
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +56,16 @@ class calender extends StatefulWidget {
                 });
               },
               onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-                // 선택된 날짜의 상태를 갱신합니다.
                 setState((){
                   if(selectedDay == this.selectedDay && focusedDay == _focusedDay) {
-                    format = CalendarFormat.month;
+                    changeCalendarFormat();
                     this.selectedDay = selectedDay;
                     _focusedDay = focusedDay;
-                    background = 0xffb3c458;
-                    foreground = 0xffdce4ae;
                   }
                   else{
-                    format = CalendarFormat.week;
+                    changeCalendarFormat();
                     this.selectedDay = selectedDay;
                     _focusedDay = focusedDay;
-                    background = 0xffffffff;
-                    foreground = 0xffffffff;
                   }
                 });
               },
@@ -166,9 +161,22 @@ class calender extends StatefulWidget {
         }),
     );
   }
+  void changeCalendarFormat(){
+    if(format==CalendarFormat.month){
+      format = CalendarFormat.week;
+      background = 0xffffffff;
+      foreground = 0xffffffff;
+    }
+    else if(format == CalendarFormat.week){
+      format = CalendarFormat.month;
+      background = 0xffb3c458;
+      foreground = 0xffdce4ae;
+    }
+  }
 }
 
 class event {
   String time;
   event(this.time);
 }
+
