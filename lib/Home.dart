@@ -1,7 +1,7 @@
-import 'dart:ffi';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,8 @@ import 'package:mypetplant/mypage.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 
+
+String water="";
 //백그라운드 -> 포그라운드 : resume
 
 class Home extends StatefulWidget {
@@ -25,6 +27,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   String _backgroundImage = 'assets/images/home-day.png'; //기본 이미지
   Color _appBarColor = Color(0xff63dafe); //기본 appbar 색상
   Timer? _timer;
+
 
   @override
   void initState() {
@@ -53,8 +56,8 @@ class home extends State<Home> with WidgetsBindingObserver {
   }
 
   void _updateBackgroundImage() {
-    final now = DateTime.now();
-    //final now = DateTime(2024, 5, 20, 21);    //test용
+    DateTime now = DateTime.now();
+    // final now = DateTime(2024, 5, 20, 19);    //test용
     final isNight = now.hour >= 19 || now.hour < 6;
     final newBackgroundImage =
         isNight ? 'assets/images/home-night.png' : 'assets/images/home-day.png';
@@ -67,7 +70,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   }
 
   void _setNextUpdate() {
-    final now = DateTime.now();
+    DateTime now = DateTime.now();
     DateTime nextUpdate;
 
     if (now.hour >= 19) {
@@ -378,7 +381,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                     children: [
                       // 급수
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {}, // 물주기
                         icon: Container(
                           width: 80,
                           height: 80,
@@ -449,7 +452,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                             UserInfo_plant? userInfo_plant =
                                 await findUserPlant(userInfo);
                             if (userInfo_plant != null) {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => My_page(
@@ -467,7 +470,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.asset(
-                              'assets/images/info.png',
+                              'assets/images/mypage.png',
                               width: 55,
                               height: 55,
                             ),
