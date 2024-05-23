@@ -33,13 +33,13 @@ class _Log_inState extends State<Log_in> {
     }
 
     // 로그인 시도
-    String? loginResult = await dbService.login(User(id: id, password: password));
+    int? loginResult = await dbService.login(User(id: id, password: password));
 
     if (loginResult != null) {
       // 로그인 성공 시 Home 화면으로 이동
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home(id: loginResult)),
+        MaterialPageRoute(builder: (context) => Home(userNumber: loginResult)),
       );
     } else {
       // 로그인 실패 시 사용자에게 알림
