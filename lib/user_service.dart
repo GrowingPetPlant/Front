@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
 
-String address = "http://172.30.1.79:8080";
+String address = "http://172.30.1.80:8080";
 
 class DBService {
   //
-  Future<String?> login(User user) async {
+  Future<int?> login(User user) async {
     var url = Uri.parse(address + '/user/login');
     try {
       var response = await http.post(
@@ -19,7 +19,13 @@ class DBService {
       );
       if (response.statusCode == 200) {
         // 로그인 성공 처리
-        return response.body;
+        try {
+          int userId = int.parse(response.body);
+          return userId;
+        } catch (e) {
+          print('응답 내용을 int로 변환하는 중 오류 발생: $e');
+          return null;
+        }
       } else {
         // 로그인 실패 처리
         return null;
@@ -200,10 +206,36 @@ class DBService {
       return false;
     }
   }
+
+  Future<bool> checkNameAvailability(String name) async {
+    var url = Uri.parse(address+'/user/nameCheck?name=$name');
+    try {
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        //body: jsonEncode({'id': id}), //아이디 정보를 함께 전송
+      );
+      if (response.statusCode == 200) {
+        // 사용 가능 아이디
+        print('사용 가능한 아이디: ${response.body}');
+        return true;
+      } else {
+        //사용 불가 아이디
+        print('사용 불가능한 아이디: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      // 네트워크 에러
+      print(e);
+      return false;
+    }
+  }
 }
 
-Future<UserInfo?> findUser(ID id) async {
-  var url = Uri.parse(address + '/user/findUser' + '?id=' + id.id!);
+Future<UserInfo?> findUser(UserNumber userNumber) async {
+  var url = Uri.parse(address + '/user/findUser' + '?userNumber=' + userNumber.userNumber!.toString());
   try {
     var response = await http.get(
       url,
@@ -227,11 +259,11 @@ Future<UserInfo?> findUser(ID id) async {
   }
 }
 
-Future<UserInfo_plant?> findUserPlant(UserInfo user) async {
+Future<UserPlant?> findUserPlant(UserNumber userNumber) async {
   var url = Uri.parse(address +
       '/userplant/findUserPlant' +
       '?userNumber=' +
-      user.userNumber.toString());
+      userNumber.userNumber!.toString());
   try {
     var response = await http.get(
       url,
@@ -242,16 +274,12 @@ Future<UserInfo_plant?> findUserPlant(UserInfo user) async {
     if (response.statusCode == 200) {
       // 마이페이지 수정 성공 처리
       var userPlantData = json.decode(utf8.decode(response.bodyBytes));
-      var userPlantInfo = UserPlant.fromJson(userPlantData);
-      UserInfo_plant userinfo_plant = UserInfo_plant(
-          userNumber: user.userNumber,
-          id: user.id,
-          password: user.password,
-          userName: user.userName,
-          phoneNumber: user.phoneNumber,
-          plantType: userPlantInfo.plantType,
-          plantName: userPlantInfo.plantName);
-      return userinfo_plant;
+      var userPlant = UserPlant.fromJson(userPlantData);
+      UserPlant userplant = UserPlant(
+          plantNumber: userPlant.plantNumber,
+          plantType: userPlant.plantType,
+          plantName: userPlant.plantName);
+      return userplant;
     } else {
       // 마이페이지 수정 실패 처리
       return null;

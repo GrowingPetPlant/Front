@@ -1,12 +1,12 @@
 
-class ID {
-  final String? id;
+class UserNumber {
+  final int? userNumber;
 
-  ID({required this.id});
+  UserNumber({required this.userNumber});
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'userNumber': userNumber,
     };
   }
 }
@@ -84,13 +84,15 @@ class UserInfo {
 }
 
 class UserPlant{
+  final int plantNumber;
   final String plantType;
   final String plantName;
 
-  UserPlant({required this.plantName, required this.plantType});
+  UserPlant({required this.plantNumber, required this.plantName, required this.plantType});
 
   factory UserPlant.fromJson(Map<String,dynamic> json){
     return UserPlant(
+        plantNumber: json['plantNumber'] as int,
         plantName: json['plantName'] as String,
         plantType: json['plantType'] as String
     );
@@ -98,6 +100,7 @@ class UserPlant{
 
   Map<String, dynamic> toJson() {
     return {
+      'plantNumber' : plantNumber,
       'plantType' : plantType,
       'plantName' : plantName
     };

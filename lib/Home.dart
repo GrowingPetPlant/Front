@@ -15,9 +15,9 @@ String water="";
 //백그라운드 -> 포그라운드 : resume
 
 class Home extends StatefulWidget {
-  final String? id;
+  final int? userNumber;
 
-  const Home({super.key, this.id});
+  const Home({super.key, this.userNumber});
 
   @override
   home createState() => home();
@@ -121,7 +121,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => calender(
-                                        id: '${widget.id}',
+                                        id: '${widget.userNumber}',
                                       )),
                             );
                           },
@@ -439,26 +439,32 @@ class home extends State<Home> with WidgetsBindingObserver {
                         ),
                       ),
 
-                      // 팁 확인
+                      // 마이페이지
                       IconButton(
                         onPressed: () async {
-                          ID id;
-                          if (widget.id != null)
-                            id = ID(id: widget.id);
+                          UserNumber userNumber;
+                          if (widget.userNumber != null)
+                            userNumber = UserNumber(userNumber: widget.userNumber);
                           else
-                            id = ID(id: "");
-                          UserInfo? userInfo = await findUser(id);
-                          if (userInfo != null) {
-                            UserInfo_plant? userInfo_plant =
-                                await findUserPlant(userInfo);
-                            if (userInfo_plant != null) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => My_page(
-                                        userInfo_plant: userInfo_plant)),
-                              );
-                            }
+                            userNumber = UserNumber(userNumber: null);
+                          UserInfo? userInfo = await findUser(userNumber);
+                          UserPlant? userplant = await findUserPlant(userNumber);
+                          if (userplant != null && userInfo!=null) {
+                            UserInfo_plant userinfo = UserInfo_plant(
+                              userNumber: widget.userNumber!,
+                              id: userInfo.id,
+                              password: userInfo.password,
+                              userName: userInfo.userName,
+                              phoneNumber: userInfo.phoneNumber,
+                              plantType: userplant.plantType,
+                              plantName: userplant.plantName
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => My_page(
+                                      userInfo_plant: userinfo)),
+                            );
                           }
                         },
                         icon: Container(

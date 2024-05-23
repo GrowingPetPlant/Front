@@ -38,12 +38,22 @@ class Sign_in_view extends State<Sign_in> {
     }
   }
 
+  Future<bool> checkName(String name) async {
+    try {
+      var nameValidity = await dbService.checkNameAvailability(name);
+      return nameValidity;
+    } catch (e) {
+      print(e);
+      return true; // 네트워크 오류 등으로 인해 확인할 수 없는 경우는 중복으로 간주하지 않음
+    }
+  }
+
   Future<void> _signUp() async {
     //모든 입력값이 유효한지 확인하고 유효하지 않은 경우 회원가입 처리 중지하기
     try {
       // 아이디 중복 여부 확인
       bool idValidity = await checkId(_idController.text.trim());
-      print(idValidity);
+      bool nameValidity = await checkName(_userNameController.text.trim());
       if (!idValidity) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -53,37 +63,45 @@ class Sign_in_view extends State<Sign_in> {
         );
         return; // 아이디가 중복되면 회원가입 진행 중지
       }
-
-      // 아이디가 중복이 아니라면 회원가입 요청 진행
-      bool isRegistered = await dbService.register(SignupRequest(
-        id: _idController.text.trim(),
-        password: _passwordController.text.trim(),
-        userName: _userNameController.text.trim(),
-        phoneNumber: _phoneNumberController.text.trim(),
-        plantType: selectedDropdown!,
-        plantName: _plantNameController.text.trim(),
-      ));
-      if (isRegistered) {
-        // 회원가입에 성공하면 로그인 화면으로 이동
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Log_in()), // 로그인 화면으로 이동
-        );
-        // 회원가입 성공 메시지 표시
+      if (!nameValidity) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('회원가입에 성공했습니다.'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('회원가입에 실패했습니다.'),
+            content: Text('사용자 닉네임이 이미 존재합니다.'),
             backgroundColor: Colors.red,
           ),
         );
+        return; // 아이디가 중복되면 회원가입 진행 중지
       }
+        // 아이디가 중복이 아니라면 회원가입 요청 진행
+        bool isRegistered = await dbService.register(SignupRequest(
+          id: _idController.text.trim(),
+          password: _passwordController.text.trim(),
+          userName: _userNameController.text.trim(),
+          phoneNumber: _phoneNumberController.text.trim(),
+          plantType: selectedDropdown!,
+          plantName: _plantNameController.text.trim(),
+        ));
+        if (isRegistered) {
+          // 회원가입에 성공하면 로그인 화면으로 이동
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Log_in()), // 로그인 화면으로 이동
+          );
+          // 회원가입 성공 메시지 표시
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('회원가입에 성공했습니다.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('회원가입에 실패했습니다.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -133,7 +151,7 @@ class Sign_in_view extends State<Sign_in> {
 
   String _validateUserNameLogic(String value) {
     if (value == null || value.isEmpty) {
-      return '이름을 입력해주세요.';
+      return '닉네임을 입력해주세요.';
     } else
       return "";
   }
@@ -334,7 +352,7 @@ class Sign_in_view extends State<Sign_in> {
                       onChanged: _validateUserName,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
-                        hintText: '사용자 이름',
+                        hintText: '사용할 닉네임을 입력해주세요',
                         contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         border: InputBorder.none,
                       ),
