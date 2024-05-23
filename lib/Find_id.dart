@@ -12,6 +12,7 @@ class Find_id extends StatefulWidget {
 }
 
 class _Find_idState extends State<Find_id> {
+  String validPhoneNumber = "";
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   DBService dbService = DBService(); // DBService 인스턴스 생성
@@ -19,6 +20,8 @@ class _Find_idState extends State<Find_id> {
   void _find_id() async {
     String userName = _nameController.text;
     String phoneNumber = _phoneNumberController.text;
+
+
 
     // 아이디와 비밀번호를 모두 입력했는지 확인
     if (userName.isEmpty || phoneNumber.isEmpty) {
@@ -118,12 +121,23 @@ class _Find_idState extends State<Find_id> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.all(screenHeight * 0.01),
-                        child: const Text(
-                          '전화번호',
-                          style: TextStyle(fontSize: 11),
-                        ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(screenHeight * 0.01),
+                            child: const Text(
+                              '전화번호',
+                              style: TextStyle(fontSize: 11),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical : screenHeight * 0.01),
+                            child: Text(
+                              validPhoneNumber,
+                              style: TextStyle(fontSize: 11, color: Colors.red),
+                            ),
+                          ),
+                        ],
                       ),
 
                       Container(
@@ -136,6 +150,7 @@ class _Find_idState extends State<Find_id> {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: TextField(
                           controller: _phoneNumberController,
+                          onChanged: _validatePhoneNumber,
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
                               hintText: '전화번호를 입력해주세요',
@@ -177,8 +192,22 @@ class _Find_idState extends State<Find_id> {
               ),
             ),
           ),
-        )
+        ),
     );
+  }
+  String _validatePhoneNumberLogic(String value) {
+    if (value == null || value.isEmpty) {
+      return '전화번호를 입력해주세요.';
+    } else if (!RegExp(r'^\d{3}-\d{4}-\d{4}$').hasMatch(value)) {
+      return '전화번호 형식은 000-0000-0000으로 입력해주세요.';
+    }
+    return "";
+  }
+
+  void _validatePhoneNumber(String value){
+    setState(() {
+      validPhoneNumber = _validatePhoneNumberLogic(value);
+    });
   }
 }
 
@@ -194,9 +223,12 @@ void findIdDialog(context){
             Text(text,textAlign : TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff515151)),),
             TextButton(onPressed: (){
               Navigator.of(context).pop();
-            }, child: const Text("확인",style: TextStyle(fontSize: 16, color: Color(0xff81ae17)),)),
-          ],
-        ),
-      ));
-  });
+            },
+                child: const Text("확인",style: TextStyle(fontSize: 16, color: Color(0xff81ae17)),)),
+            ],
+          ),
+        )
+      );
+    }
+  );
 }
