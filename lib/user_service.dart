@@ -232,6 +232,8 @@ class DBService {
       return false;
     }
   }
+  
+
 }
 
 Future<UserInfo?> findUser(UserNumber userNumber) async {
@@ -288,5 +290,28 @@ Future<UserPlant?> findUserPlant(UserNumber userNumber) async {
     // 네트워크 요청 중 에러 발생 처리
     print(e);
     return null;
+  }
+}
+
+Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async{
+  var url = Uri.parse(address+'/status/wateringdate?plantNumber='+plantNumber.toString());
+  try {
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      List<DateTime> fetchedDates = data.map((date) => DateTime.parse(date)).toList();
+
+      return fetchedDates;
+    } else {
+      throw Exception('Failed to load watering dates');
+    }
+  } catch (e) {
+    // 네트워크 에러
+    print(e);
   }
 }

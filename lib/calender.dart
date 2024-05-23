@@ -4,20 +4,36 @@ import 'package:mypetplant/Home.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class calender extends StatefulWidget {
-  final String? id;
-  const calender({Key? key, this.id}) : super(key: key);
+  final List<DateTime>? wateredDate;
+  const calender({Key? key, this.wateredDate}) : super(key: key);
 
   State<calender> createState() => _CalendarState();
 }
   class _CalendarState extends State<calender>{
 
-    Map<DateTime, List<event>> water = {
-      DateTime.utc(2024,5,12) : [ event(''), event(''), event('') ],
-      DateTime.utc(2024,7,14) : [ event('') ],
-    };
+    Map<DateTime, List<event>> water = {};
+
+    @override
+    void initState() {
+      super.initState();
+      _initializeWaterEvents(widget.wateredDate);
+    }
+
+
+    void _initializeWaterEvents(List<DateTime>? dates) {
+      if(dates != null)
+        for (var date in dates) {
+          DateTime wateredDate = DateTime.utc(date.year, date.month, date.day);
+          if(water.containsKey(wateredDate))
+            water[wateredDate]!.add(event(''));
+          else
+            water[wateredDate] = [event('')];
+        }
+    }
 
     List<event> _getEventsForDay(DateTime day) {
-      return water[day] ?? [];
+      DateTime wateredDay = DateTime.utc(day.year, day.month, day.day);
+      return water[wateredDay] ?? [];
     }
 
     DateTime selectedDay = DateTime(

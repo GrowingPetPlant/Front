@@ -28,6 +28,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   Color _appBarColor = Color(0xff63dafe); //기본 appbar 색상
   Timer? _timer;
 
+  List<DateTime>? wateringDates = [];
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     _updateBackgroundImage(); //앱 시작 시 배경 이미지 업데이트
     _setNextUpdate();
   }
+
 
   @override
   void dispose() {
@@ -116,12 +118,20 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 const BorderRadius.all(Radius.circular(15)),
                             color: Colors.black45),
                         child: TextButton(
-                          onPressed: () {
+                          onPressed: () async{
+                            UserNumber userNumber;
+                            if (widget.userNumber != null)
+                              userNumber = UserNumber(userNumber: widget.userNumber);
+                            else
+                              userNumber = UserNumber(userNumber: null);
+                            UserPlant? userplant = await findUserPlant(userNumber);
+                            wateringDates = await fetchWarteringDates(userplant!.plantNumber);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => calender(
-                                        id: '${widget.userNumber}',
+                                        wateredDate: wateringDates,
                                       )),
                             );
                           },
