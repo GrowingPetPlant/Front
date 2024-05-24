@@ -37,9 +37,11 @@ class _Log_inState extends State<Log_in> {
 
     if (loginResult != null) {
       // 로그인 성공 시 Home 화면으로 이동
+      UserPlant? userplant = await findUserPlant(UserNumber(userNumber: loginResult));
+      String plantName = userplant!.plantName;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home(userNumber: loginResult)),
+        MaterialPageRoute(builder: (context) => Home(userNumber: loginResult, plantName : plantName)),
       );
     } else {
       // 로그인 실패 시 사용자에게 알림

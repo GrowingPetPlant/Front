@@ -16,8 +16,9 @@ String water="";
 
 class Home extends StatefulWidget {
   final int? userNumber;
+  final String? plantName;
 
-  const Home({super.key, this.userNumber});
+  const Home({super.key, this.userNumber, this.plantName});
 
   @override
   home createState() => home();
@@ -136,7 +137,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                             );
                           },
                           child: Text(
-                            '토마토',
+                            widget.plantName!,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 25,

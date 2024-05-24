@@ -86,7 +86,7 @@ class _My_page_view extends State<My_page> {
       // 마이페이지 수정 성공 시 Home 화면으로 이동
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home(userNumber: userNumber)),
+        MaterialPageRoute(builder: (context) => Home(userNumber: userNumber, plantName: plantName,)),
       );
     } else {
       // 로그인 실패 시 사용자에게 알림

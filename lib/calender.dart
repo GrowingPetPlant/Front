@@ -75,13 +75,17 @@ class calender extends StatefulWidget {
                   },
                   onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
                     setState((){
-                      if(selectedDay == this.selectedDay && focusedDay == _focusedDay) {
+                      if(format==CalendarFormat.month) {
+                        changeCalendarFormat();
+                        this.selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      }
+                      else if(format==CalendarFormat.week && selectedDay == this.selectedDay && focusedDay == _focusedDay){
                         changeCalendarFormat();
                         this.selectedDay = selectedDay;
                         _focusedDay = focusedDay;
                       }
                       else{
-                        changeCalendarFormat();
                         this.selectedDay = selectedDay;
                         _focusedDay = focusedDay;
                       }
