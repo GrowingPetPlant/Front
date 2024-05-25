@@ -10,8 +10,10 @@ import 'package:mypetplant/mypage.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 
+import 'package:mypetplant/status.dart';
+import 'package:mypetplant/status_service.dart';
 
-String water="";
+String water = "";
 //백그라운드 -> 포그라운드 : resume
 
 class Home extends StatefulWidget {
@@ -28,6 +30,9 @@ class home extends State<Home> with WidgetsBindingObserver {
   String _backgroundImage = 'assets/images/home-day.png'; //기본 이미지
   Color _appBarColor = Color(0xff63dafe); //기본 appbar 색상
   Timer? _timer;
+  int? _temperature; //온도 저장할 변수
+  int? _moisture; //습도 저장할 변수
+  int? _humidity; //비옥도 저장할 변수
 
   List<DateTime>? wateringDates = [];
 
@@ -37,8 +42,10 @@ class home extends State<Home> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this); // 옵저버 추가
     _updateBackgroundImage(); //앱 시작 시 배경 이미지 업데이트
     _setNextUpdate();
+    _fetchTemperature(); //온도 데이터 가져오기
+    _fetchMoisture(); //습도 데이터 가져오기
+    _fetchHumi(); //비옥도 데이터 가져오기
   }
-
 
   @override
   void dispose() {
@@ -55,6 +62,9 @@ class home extends State<Home> with WidgetsBindingObserver {
       // 앱이 포그라운드로 돌아왔을 때 실행할 작업
       _updateBackgroundImage(); //배경이미지 업데이트
       _setNextUpdate(); //다음 업데이트 설정
+      _fetchTemperature(); //온도 데이터 가져오기
+      _fetchMoisture(); //습도 데이터 가져오기
+      _fetchHumi(); //비옥도 데이터 가져오기
     }
   }
 
@@ -92,6 +102,57 @@ class home extends State<Home> with WidgetsBindingObserver {
     });
   }
 
+  //온도
+  void _fetchTemperature() async {
+    if (widget.userNumber != null) {
+      UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
+      UserPlant? userPlant = await findUserPlant(userNumber);
+
+      if (userPlant != null) {
+        StatusService statusService = StatusService();
+        StatusTemp status =
+            await statusService.fetchRecentTemp(userPlant.plantNumber);
+        setState(() {
+          _temperature = status.temperature;
+        });
+      }
+    }
+  }
+
+  //습도
+  void _fetchMoisture() async {
+    if (widget.userNumber != null) {
+      UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
+      UserPlant? userPlant = await findUserPlant(userNumber);
+
+      if (userPlant != null) {
+        StatusService statusService = StatusService();
+        StatusMoisture status =
+            await statusService.fetchRecentMoisture(userPlant.plantNumber);
+        setState(() {
+          _moisture = status.moisture;
+        });
+      }
+    }
+  }
+
+  //비옥도
+  void _fetchHumi() async {
+    if (widget.userNumber != null) {
+      UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
+      UserPlant? userPlant = await findUserPlant(userNumber);
+
+      if (userPlant != null) {
+        StatusService statusService = StatusService();
+        StatusHumi status =
+            await statusService.fetchRecentHumi(userPlant.plantNumber);
+        setState(() {
+          _humidity = status.humidity;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -119,14 +180,17 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 const BorderRadius.all(Radius.circular(15)),
                             color: Colors.black45),
                         child: TextButton(
-                          onPressed: () async{
+                          onPressed: () async {
                             UserNumber userNumber;
                             if (widget.userNumber != null)
-                              userNumber = UserNumber(userNumber: widget.userNumber);
+                              userNumber =
+                                  UserNumber(userNumber: widget.userNumber);
                             else
                               userNumber = UserNumber(userNumber: null);
-                            UserPlant? userplant = await findUserPlant(userNumber);
-                            wateringDates = await fetchWarteringDates(userplant!.plantNumber);
+                            UserPlant? userplant =
+                                await findUserPlant(userNumber);
+                            wateringDates = await fetchWarteringDates(
+                                userplant!.plantNumber);
 
                             Navigator.push(
                               context,
@@ -176,7 +240,9 @@ class home extends State<Home> with WidgetsBindingObserver {
                                     children: [
                                       // 흰색 테두리 효과를 위한 텍스트
                                       Text(
-                                        '20°C',
+                                        _temperature != null
+                                            ? '$_temperature°C'
+                                            : 'Loading...',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
@@ -195,8 +261,10 @@ class home extends State<Home> with WidgetsBindingObserver {
                                         textAlign: TextAlign.left,
                                       ),
                                       // 원래의 검정색 텍스트
-                                      const Text(
-                                        '20°C',
+                                      Text(
+                                        _temperature != null
+                                            ? '$_temperature°C'
+                                            : 'Loading...',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
@@ -234,7 +302,9 @@ class home extends State<Home> with WidgetsBindingObserver {
                                       children: [
                                         // 흰색 테두리 효과를 위한 텍스트
                                         Text(
-                                          '30%',
+                                          _moisture != null
+                                              ? '$_moisture%'
+                                              : 'Loading...',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -253,8 +323,10 @@ class home extends State<Home> with WidgetsBindingObserver {
                                           textAlign: TextAlign.left,
                                         ),
                                         // 원래의 검정색 텍스트
-                                        const Text(
-                                          '30%',
+                                        Text(
+                                          _moisture != null
+                                              ? '$_moisture%'
+                                              : 'Loading...',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -291,7 +363,9 @@ class home extends State<Home> with WidgetsBindingObserver {
                                       children: [
                                         // 흰색 테두리 효과를 위한 텍스트
                                         Text(
-                                          '50%',
+                                          _humidity != null
+                                              ? '$_humidity%'
+                                              : 'Loading...',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -310,8 +384,10 @@ class home extends State<Home> with WidgetsBindingObserver {
                                           textAlign: TextAlign.left,
                                         ),
                                         // 원래의 검정색 텍스트
-                                        const Text(
-                                          '50%',
+                                        Text(
+                                          _humidity != null
+                                              ? '$_humidity%'
+                                              : 'Loading...',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -455,26 +531,27 @@ class home extends State<Home> with WidgetsBindingObserver {
                         onPressed: () async {
                           UserNumber userNumber;
                           if (widget.userNumber != null)
-                            userNumber = UserNumber(userNumber: widget.userNumber);
+                            userNumber =
+                                UserNumber(userNumber: widget.userNumber);
                           else
                             userNumber = UserNumber(userNumber: null);
                           UserInfo? userInfo = await findUser(userNumber);
-                          UserPlant? userplant = await findUserPlant(userNumber);
-                          if (userplant != null && userInfo!=null) {
+                          UserPlant? userplant =
+                              await findUserPlant(userNumber);
+                          if (userplant != null && userInfo != null) {
                             UserInfo_plant userinfo = UserInfo_plant(
-                              userNumber: widget.userNumber!,
-                              id: userInfo.id,
-                              password: userInfo.password,
-                              userName: userInfo.userName,
-                              phoneNumber: userInfo.phoneNumber,
-                              plantType: userplant.plantType,
-                              plantName: userplant.plantName
-                            );
+                                userNumber: widget.userNumber!,
+                                id: userInfo.id,
+                                password: userInfo.password,
+                                userName: userInfo.userName,
+                                phoneNumber: userInfo.phoneNumber,
+                                plantType: userplant.plantType,
+                                plantName: userplant.plantName);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => My_page(
-                                      userInfo_plant: userinfo)),
+                                  builder: (context) =>
+                                      My_page(userInfo_plant: userinfo)),
                             );
                           }
                         },
