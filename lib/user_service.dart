@@ -1,9 +1,9 @@
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
 
-String address = "http://172.30.1.80:8080";
+//String address = "http://172.30.1.80:8080";
+String address = "http://localhost:8080";
 
 class DBService {
   //
@@ -86,7 +86,7 @@ class DBService {
   }
 
   Future<String?> mypage(UserInfo_plant userInfo_plant) async {
-    var url = Uri.parse(address+'/user/mypage');
+    var url = Uri.parse(address + '/user/mypage');
     try {
       var response = await http.patch(
         url,
@@ -110,7 +110,7 @@ class DBService {
   }
 
   Future<String?> logout() async {
-    var url = Uri.parse(address+'/user/logout');
+    var url = Uri.parse(address + '/user/logout');
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -127,7 +127,7 @@ class DBService {
   }
 
   Future<String?> deleteUser(String id) async {
-    var url = Uri.parse(address+'/user/delete/' + id);
+    var url = Uri.parse(address + '/user/delete/' + id);
     try {
       var response = await http.delete(
         url,
@@ -179,10 +179,9 @@ class DBService {
     }
   }
 
-
 // 아이디 중복 검사
   Future<bool> checkIdAvailability(String id) async {
-    var url = Uri.parse(address+'/user/idCheck?id=$id');
+    var url = Uri.parse(address + '/user/idCheck?id=$id');
     try {
       var response = await http.post(
         url,
@@ -208,7 +207,7 @@ class DBService {
   }
 
   Future<bool> checkNameAvailability(String name) async {
-    var url = Uri.parse(address+'/user/nameCheck?name=$name');
+    var url = Uri.parse(address + '/user/nameCheck?name=$name');
     try {
       var response = await http.post(
         url,
@@ -232,12 +231,13 @@ class DBService {
       return false;
     }
   }
-  
-
 }
 
 Future<UserInfo?> findUser(UserNumber userNumber) async {
-  var url = Uri.parse(address + '/user/findUser' + '?userNumber=' + userNumber.userNumber!.toString());
+  var url = Uri.parse(address +
+      '/user/findUser' +
+      '?userNumber=' +
+      userNumber.userNumber!.toString());
   try {
     var response = await http.get(
       url,
@@ -293,8 +293,9 @@ Future<UserPlant?> findUserPlant(UserNumber userNumber) async {
   }
 }
 
-Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async{
-  var url = Uri.parse(address+'/status/wateringdate?plantNumber='+plantNumber.toString());
+Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async {
+  var url = Uri.parse(
+      address + '/status/wateringdate?plantNumber=' + plantNumber.toString());
   try {
     var response = await http.get(
       url,
@@ -304,7 +305,8 @@ Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async{
     );
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      List<DateTime> fetchedDates = data.map((date) => DateTime.parse(date)).toList();
+      List<DateTime> fetchedDates =
+          data.map((date) => DateTime.parse(date)).toList();
 
       return fetchedDates;
     } else {
