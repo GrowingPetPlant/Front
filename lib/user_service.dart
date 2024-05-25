@@ -247,7 +247,7 @@ Future<UserInfo?> findUser(UserNumber userNumber) async {
     );
     if (response.statusCode == 200) {
       // 마이페이지 수정 성공 처리
-      var userData = json.decode(response.body);
+      var userData = json.decode(utf8.decode(response.bodyBytes));
       var userInfo = UserInfo.fromJson(userData);
       return userInfo;
     } else {
