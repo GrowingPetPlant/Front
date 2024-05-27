@@ -73,6 +73,7 @@ flutter:
   - assets/images/marker.png
   - assets/images/home.png
   - assets/images/mypage.png
+  - assets/images/reload.png
 
 
   # The following line ensures that the Material Icons font is
