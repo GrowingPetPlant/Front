@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
 
-String address = "http://172.30.1.80:8080";
+String address = "http://172.30.1.81:8080";
 
 class DBService {
   //
@@ -232,8 +232,42 @@ class DBService {
       return false;
     }
   }
-  
 
+  Future<String?> putwater(PostWateringReq postWateringReq) async {
+    var url = Uri.parse(address + '/arduino/putwater');
+    try {
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(postWateringReq.toJson()),
+      );
+      return response.body;
+    } catch (e) {
+      // 네트워크 요청 중 에러 발생 처리 null 반환
+      print(e);
+      return null;
+    }
+  }
+}
+
+Future<String?> watering(PostWateringReq postWateringReq) async {
+  var url = Uri.parse(address + '/arduino/watering');
+  try {
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(postWateringReq.toJson()),
+    );
+    return response.body;
+  } catch (e) {
+    // 네트워크 요청 중 에러 발생 처리 null 반환
+    print(e);
+    return null;
+  }
 }
 
 Future<UserInfo?> findUser(UserNumber userNumber) async {

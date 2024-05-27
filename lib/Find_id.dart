@@ -215,7 +215,7 @@ void findIdDialog(context){
   showDialog(context: context, builder: (context){
     return Dialog(
       child : Container(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.fromLTRB(30,30,30,20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

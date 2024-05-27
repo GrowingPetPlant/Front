@@ -158,3 +158,20 @@ class SignupRequest {
     };
   }
 }
+
+class PostWateringReq{
+  final int plantNumber;
+  final String wateringDate;
+
+  PostWateringReq({
+   required this.plantNumber,
+   required this.wateringDate
+  });
+
+  Map<String, dynamic> toJson(){
+    return{
+      'plantNumber' : plantNumber,
+      'wateringDate' : wateringDate
+    };
+  }
+}

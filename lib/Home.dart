@@ -11,7 +11,7 @@ import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 
 
-String water="";
+String? ifWatered;
 //백그라운드 -> 포그라운드 : resume
 
 class Home extends StatefulWidget {
@@ -28,6 +28,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   String _backgroundImage = 'assets/images/home-day.png'; //기본 이미지
   Color _appBarColor = Color(0xff63dafe); //기본 appbar 색상
   Timer? _timer;
+  DBService dbService = DBService(); // DBService 인스턴스 생성
 
   List<DateTime>? wateringDates = [];
 
@@ -92,6 +93,20 @@ class home extends State<Home> with WidgetsBindingObserver {
     });
   }
 
+  void _putWater() async{
+    UserPlant? userPlant = await findUserPlant(UserNumber(userNumber: widget.userNumber));
+    List<DateTime>? wateringDate = await fetchWarteringDates(userPlant!.plantNumber);
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    String iso8601String_today = today.toIso8601String();
+    if(!wateringDate!.isEmpty){
+      ifWatered = await dbService.putwater(PostWateringReq(plantNumber: userPlant!.plantNumber, wateringDate: iso8601String_today));
+    }
+    else{
+      ifWatered = "물을 주시겠습니까?";
+    }
+    waterDialog(context, PostWateringReq(plantNumber: userPlant!.plantNumber, wateringDate: iso8601String_today));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -154,7 +169,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                     children: [
                       // 온도
                       SizedBox(
-                          width: 250,
+                          width: 280,
                           height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -208,12 +223,24 @@ class home extends State<Home> with WidgetsBindingObserver {
                                   ),
                                 ),
                               ),
+                              IconButton(
+                                onPressed: () {}, //새로고침
+                                icon: Container(
+                                  width: 20,
+                                  height: 20,
+                                  child: Image.asset(
+                                    'assets/images/reload.png',
+                                    width: 20,
+                                    height: 20
+                                  ),
+                                ),
+                              ),
                             ],
                           )),
 
                       // 습도
                       SizedBox(
-                          width: 250,
+                          width: 280,
                           height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -270,7 +297,7 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                       // 비옥도
                       SizedBox(
-                          width: 250,
+                          width: 280,
                           height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -327,7 +354,7 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                       // D-day
                       SizedBox(
-                          width: 250,
+                          width: 280,
                           height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -392,7 +419,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                     children: [
                       // 급수
                       IconButton(
-                        onPressed: () {}, // 물주기
+                        onPressed: () {_putWater();}, // 물주기
                         icon: Container(
                           width: 80,
                           height: 80,
@@ -498,4 +525,43 @@ class home extends State<Home> with WidgetsBindingObserver {
                   )),
             ])));
   }
+}
+
+void waterDialog(context, PostWateringReq postWateringReq){
+  showDialog(context: context, builder: (context){
+    return Dialog(
+        child : Container(
+          padding: const EdgeInsets.fromLTRB(30,30,30,20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(ifWatered!,textAlign : TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff515151)),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () async{
+                        String? waterResult = await watering(postWateringReq);
+                        print(waterResult);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("확인",style: TextStyle(fontSize: 16, color: Color(0xff81ae17)),
+                      )
+                  ),
+                  TextButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("취소",style: TextStyle(fontSize: 16, color: Color(0xff81ae17)),
+                      )
+                  ),
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+  );
 }
