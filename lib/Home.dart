@@ -523,74 +523,215 @@ class home extends State<Home> with WidgetsBindingObserver {
                   )),
 
               // 제어 dock
-              Container(
-                  alignment: const Alignment(0, 0.9),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                Container(
+                  margin: EdgeInsets.all(15),
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // 급수
-                      IconButton(
-                        onPressed: () {
-                          _putWater();
-                        }, // 물주기
-                        icon: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/water.png',
-                              width: 55,
-                              height: 55,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // 급수 text
+                          Container(
+                            width: 80,
+                            height: 20,
+                            child: Align(
+                              child: Stack(
+                                children: [
+                                  // 흰색 테두리 효과를 위한 텍스트
+                                  Text(
+                                    'ON',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      foreground: Paint()
+                                        ..style = PaintingStyle.stroke
+                                        ..strokeWidth = 3
+                                        ..color =
+                                          Colors.white, // 흰색 텍스트 스트로크
+                                          shadows: const [
+                                            Shadow(
+                                              blurRadius: 2,
+                                              color: Colors.white, // 흰색 테두리
+                                            ),
+                                          ],
+                                      ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  // 원래의 검정색 텍스트
+                                  const Text(
+                                    'ON',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black, // 검정색 텍스트
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ),
+
+                          Container( // 조명 text
+                            width: 80,
+                            height: 20,
+                            child: Align(
+                              child: Stack(
+                                children: [
+                                  // 흰색 테두리 효과를 위한 텍스트
+                                  Text(
+                                    'ON',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      foreground: Paint()
+                                        ..style = PaintingStyle.stroke
+                                        ..strokeWidth = 3
+                                        ..color =
+                                          Colors.white, // 흰색 텍스트 스트로크
+                                          shadows: const [
+                                            Shadow(
+                                              blurRadius: 2,
+                                              color: Colors.white, // 흰색 테두리
+                                            ),
+                                          ],
+                                      ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  // 원래의 검정색 텍스트
+                                  const Text(
+                                    'ON',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black, // 검정색 텍스트
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ),
+
+                          Container( // 환풍 text
+                            width: 80,
+                            height: 20,
+                            child: Align(
+                              child: Stack(
+                                children: [
+                                  // 흰색 테두리 효과를 위한 텍스트
+                                  Text(
+                                    'ON',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      foreground: Paint()
+                                        ..style = PaintingStyle.stroke
+                                        ..strokeWidth = 3
+                                        ..color =
+                                          Colors.white, // 흰색 텍스트 스트로크
+                                          shadows: const [
+                                            Shadow(
+                                              blurRadius: 2,
+                                              color: Colors.white, // 흰색 테두리
+                                            ),
+                                          ],
+                                      ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  // 원래의 검정색 텍스트
+                                  const Text(
+                                    'ON',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black, // 검정색 텍스트
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ),
+
+                          Container( // 마이페이지 text
+                            width: 80,
+                            height: 20,
+                            ),
+                          ],
+                        ),
+                      
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // 급수
+                          IconButton(
+                            onPressed: () {
+                              _putWater();
+                            }, // 물주기
+                            icon: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/water.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      // 조명
-                      IconButton(
-                        onPressed: () {},
-                        icon: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/lamp.png',
-                              width: 55,
-                              height: 55,
+                          // 조명
+                          IconButton(
+                            onPressed: () {},
+                            icon: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/lamp.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      // 환풍
-                      IconButton(
-                        onPressed: () {},
-                        icon: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/fan.png',
-                              width: 55,
-                              height: 55,
+                          // 환풍
+                          IconButton(
+                            onPressed: () {},
+                            icon: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/fan.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      // 마이페이지
+                          // 마이페이지
                       IconButton(
                         onPressed: () async {
                           UserNumber userNumber;
@@ -635,11 +776,17 @@ class home extends State<Home> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                    ],
-                  )),
-            ])));
+
+                        ],
+                      )
+                    ],)
+                  )
+              ]
+            )
+          )
+      );
+    }
   }
-}
 
 void waterDialog(context, PostWateringReq postWateringReq) {
   showDialog(
