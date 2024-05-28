@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'status.dart';
 
-String address = "http://172.30.1.81:8080";
+String address = "http://localhost:8080";
+//String address = "http://172.30.1.81:8080";
 
 class StatusService {
   //온도
@@ -17,7 +18,7 @@ class StatusService {
     }
   }
 
-  //습도
+  //비옥도
   Future<StatusMoisture> fetchRecentMoisture(int plantNumber) async {
     final response = await http
         .get(Uri.parse('$address/status/moisture?plantNumber=$plantNumber'));
@@ -29,7 +30,7 @@ class StatusService {
     }
   }
 
-  //비옥도
+  //대기
   Future<StatusHumi> fetchRecentHumi(int plantNumber) async {
     final response = await http
         .get(Uri.parse('$address/status/humi?plantNumber=$plantNumber'));
