@@ -41,4 +41,16 @@ class StatusService {
       throw Exception('비옥도 불러오기 실패했습니다');
     }
   }
+
+  // 자란 일수
+  Future<StatusDays> fetchGrowingDays(int plantNumber) async {
+    final response = await http
+        .get(Uri.parse('$address/status/days?plantNumber=$plantNumber'));
+
+    if (response.statusCode == 200) {
+      return StatusDays.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('자란 일수 불러오기 실패했습니다');
+    }
+  }
 }
