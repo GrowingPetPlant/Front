@@ -11,7 +11,7 @@ class StatusTemp {
   }
 }
 
-//습도
+//비옥도
 class StatusMoisture {
   final int moisture;
 
@@ -24,7 +24,7 @@ class StatusMoisture {
   }
 }
 
-//비옥도
+//대기
 class StatusHumi {
   final int humidity;
 
