@@ -36,3 +36,16 @@ class StatusHumi {
     );
   }
 }
+
+// 자란 일수
+class StatusDays {
+  final int days;
+
+  StatusDays({required this.days});
+
+  factory StatusDays.fromJson(dynamic json) {
+    return StatusDays(
+      days: json as int,
+    );
+  }
+}

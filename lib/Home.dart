@@ -36,6 +36,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   int? _temperature; //온도 저장할 변수
   int? _moisture; //습도 저장할 변수
   int? _humidity; //비옥도 저장할 변수
+  int? _days; //자란 일수 저장할 변수
 
   List<DateTime>? wateringDates = [];
 
@@ -48,6 +49,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     _fetchTemperature(); //온도 데이터 가져오기
     _fetchMoisture(); //습도 데이터 가져오기
     _fetchHumi(); //비옥도 데이터 가져오기
+    _fetchGrowingDays(); //자란 일수 데이터 가져오기
   }
 
   @override
@@ -68,6 +70,7 @@ class home extends State<Home> with WidgetsBindingObserver {
       _fetchTemperature(); //온도 데이터 가져오기
       _fetchMoisture(); //습도 데이터 가져오기
       _fetchHumi(); //비옥도 데이터 가져오기
+      _fetchGrowingDays(); //자란 일수 데이터 가져오기
     }
   }
 
@@ -173,6 +176,23 @@ class home extends State<Home> with WidgetsBindingObserver {
             await statusService.fetchRecentHumi(userPlant.plantNumber);
         setState(() {
           _humidity = status.humidity;
+        });
+      }
+    }
+  }
+
+  // 자란 일수
+  void _fetchGrowingDays() async {
+    if (widget.userNumber != null) {
+      UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
+      UserPlant? userPlant = await findUserPlant(userNumber);
+
+      if (userPlant != null) {
+        StatusService statusService = StatusService();
+        StatusDays status =
+            await statusService.fetchGrowingDays(userPlant.plantNumber);
+        setState(() {
+          _days = status.days;
         });
       }
     }
@@ -378,7 +398,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                             ],
                           )),
 
-                      // 비옥도
+                      // 토양 습도
                       SizedBox(
                           width: 280,
                           height: 50,
@@ -439,7 +459,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                             ],
                           )),
 
-                      // D-day
+                      // D-day (자란 기간)
                       SizedBox(
                           width: 280,
                           height: 50,
@@ -452,7 +472,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 decoration: const BoxDecoration(
                                     image: DecorationImage(
                                         image: AssetImage(
-                                            'assets/images/d-day.png'),
+                                            'assets/images/date.png'),
                                         fit: BoxFit.cover)),
                               ),
                               Container(
@@ -462,7 +482,9 @@ class home extends State<Home> with WidgetsBindingObserver {
                                       children: [
                                         // 흰색 테두리 효과를 위한 텍스트
                                         Text(
-                                          '30%',
+                                          _days != null
+                                              ? 'D+$_days'
+                                              : 'Loading...',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -481,8 +503,10 @@ class home extends State<Home> with WidgetsBindingObserver {
                                           textAlign: TextAlign.left,
                                         ),
                                         // 원래의 검정색 텍스트
-                                        const Text(
-                                          '30%',
+                                        Text(
+                                          _days != null
+                                              ? 'D+$_days'
+                                              : 'Loading...',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,

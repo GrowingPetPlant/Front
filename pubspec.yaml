@@ -56,7 +56,6 @@ flutter:
   - assets/images/logo.png
   - assets/images/home-day.png
   - assets/images/home-night.png
-  - assets/images/d-day.png
   - assets/images/fan.png
   - assets/images/humi.png
   - assets/images/info.png
@@ -74,6 +73,7 @@ flutter:
   - assets/images/home.png
   - assets/images/mypage.png
   - assets/images/reload.png
+  - assets/images/date.png
 
 
   # The following line ensures that the Material Icons font is
