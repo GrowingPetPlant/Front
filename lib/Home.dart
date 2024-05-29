@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -15,6 +16,8 @@ import 'package:mypetplant/status_service.dart';
 
 String? ifWatered;
 String water = "";
+String _light="";
+String _fan="";
 
 //백그라운드 -> 포그라운드 : resume
 class Home extends StatefulWidget {
@@ -40,6 +43,8 @@ class home extends State<Home> with WidgetsBindingObserver {
 
   List<DateTime>? wateringDates = [];
 
+  StatusService statusService = StatusService();
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +55,8 @@ class home extends State<Home> with WidgetsBindingObserver {
     _fetchMoisture(); //습도 데이터 가져오기
     _fetchHumi(); //비옥도 데이터 가져오기
     _fetchGrowingDays(); //자란 일수 데이터 가져오기
+    _fetchLighting();
+    _fetchFanning();
   }
 
   @override
@@ -137,7 +144,6 @@ class home extends State<Home> with WidgetsBindingObserver {
       UserPlant? userPlant = await findUserPlant(userNumber);
 
       if (userPlant != null) {
-        StatusService statusService = StatusService();
         StatusTemp status =
             await statusService.fetchRecentTemp(userPlant.plantNumber);
         setState(() {
@@ -154,7 +160,6 @@ class home extends State<Home> with WidgetsBindingObserver {
       UserPlant? userPlant = await findUserPlant(userNumber);
 
       if (userPlant != null) {
-        StatusService statusService = StatusService();
         StatusMoisture status =
             await statusService.fetchRecentMoisture(userPlant.plantNumber);
         setState(() {
@@ -171,7 +176,6 @@ class home extends State<Home> with WidgetsBindingObserver {
       UserPlant? userPlant = await findUserPlant(userNumber);
 
       if (userPlant != null) {
-        StatusService statusService = StatusService();
         StatusHumi status =
             await statusService.fetchRecentHumi(userPlant.plantNumber);
         setState(() {
@@ -188,7 +192,6 @@ class home extends State<Home> with WidgetsBindingObserver {
       UserPlant? userPlant = await findUserPlant(userNumber);
 
       if (userPlant != null) {
-        StatusService statusService = StatusService();
         StatusDays status =
             await statusService.fetchGrowingDays(userPlant.plantNumber);
         setState(() {
@@ -197,6 +200,35 @@ class home extends State<Home> with WidgetsBindingObserver {
       }
     }
   }
+
+  void _fetchLighting() async{
+    if(widget.userNumber != null){
+      UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
+      UserPlant? userPlant = await findUserPlant(userNumber);
+
+      if(userPlant!=null){
+        String light = await statusService.isLighted(userPlant.plantNumber);
+        setState(() {
+          _light = light;
+        });
+      }
+    }
+  }
+
+  void _fetchFanning() async{
+    if(widget.userNumber != null){
+      UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
+      UserPlant? userPlant = await findUserPlant(userNumber);
+
+      if(userPlant!=null){
+        String fan = await statusService.isFanned(userPlant.plantNumber);
+        setState(() {
+          _fan = fan;
+        });
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -524,7 +556,7 @@ class home extends State<Home> with WidgetsBindingObserver {
 
               // 제어 dock
                 Container(
-                  margin: EdgeInsets.all(15),
+                  margin: EdgeInsets.all(10),
                   alignment: Alignment.bottomCenter,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -541,7 +573,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 children: [
                                   // 흰색 테두리 효과를 위한 텍스트
                                   Text(
-                                    'ON',
+                                    "OFF",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -560,8 +592,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                                     textAlign: TextAlign.center,
                                   ),
                                   // 원래의 검정색 텍스트
-                                  const Text(
-                                    'ON',
+                                  Text(
+                                    "OFF",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -582,7 +614,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 children: [
                                   // 흰색 테두리 효과를 위한 텍스트
                                   Text(
-                                    'ON',
+                                    _light,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -601,8 +633,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                                     textAlign: TextAlign.center,
                                   ),
                                   // 원래의 검정색 텍스트
-                                  const Text(
-                                    'ON',
+                                  Text(
+                                    _light,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -623,7 +655,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 children: [
                                   // 흰색 테두리 효과를 위한 텍스트
                                   Text(
-                                    'ON',
+                                    _fan,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -642,8 +674,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                                     textAlign: TextAlign.center,
                                   ),
                                   // 원래의 검정색 텍스트
-                                  const Text(
-                                    'ON',
+                                   Text(
+                                    _fan,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -691,7 +723,13 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                           // 조명
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async{
+                              UserPlant? userplant = await findUserPlant(UserNumber(userNumber : widget!.userNumber));
+                              String light = await statusService.lighting(userplant!.plantNumber);
+                              setState((){
+                                _light = light;
+                              });
+                              },
                             icon: Container(
                               width: 80,
                               height: 80,
@@ -712,7 +750,13 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                           // 환풍
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async{
+                              UserPlant? userplant = await findUserPlant(UserNumber(userNumber : widget!.userNumber));
+                              String fan = await statusService.fanning(userplant!.plantNumber);
+                              setState((){
+                                _fan = fan;
+                              });
+                            },
                             icon: Container(
                               width: 80,
                               height: 80,

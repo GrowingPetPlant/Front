@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'status.dart';
 
-String address = "http://localhost:8080";
-//String address = "http://172.30.1.81:8080";
+//String address = "http://localhost:8080";
+String address = "http://10.10.92.96:8080";
 
 class StatusService {
   //온도
@@ -52,5 +52,61 @@ class StatusService {
     } else {
       throw Exception('자란 일수 불러오기 실패했습니다');
     }
+  }
+
+  //전구버튼 누르면 실행할거
+  Future<String> lighting(int plantNumber) async{
+    final response = await http.post(Uri.parse('$address/arduino/lighting?plantNumber=$plantNumber'));
+    if(response.statusCode == 200) {
+      if (jsonDecode(response.body))
+        return "ON";
+      else
+        return "OFF";
+    }
+    else
+      return "!";
+  }
+
+  //홈화면 넘어갈 때 실행할거
+  Future<String> isLighted(int plantNumber) async{
+    final response = await http.get(Uri.parse('$address/status/isLighted?plantNumber=$plantNumber'));
+    if(response.statusCode==200) {
+      if (jsonDecode(response.body)) {
+        return "ON";
+      }
+      else {
+        return "OFF";
+      }
+    }
+    else
+      return "!";
+  }
+
+  //팬 버튼 누르면 실행할거
+  Future<String> fanning(int plantNumber) async{
+    final response = await http.post(Uri.parse('$address/arduino/fanning?plantNumber=$plantNumber'));
+    if(response.statusCode == 200) {
+      if (jsonDecode(response.body))
+        return "ON";
+      else
+        return "OFF";
+    }
+    else
+      return "!";
+  }
+
+  //홈화면 넘어갈 때 실행할거
+  Future<String> isFanned(int plantNumber) async{
+    final response = await http.get(Uri.parse('$address/status/isFanned?plantNumber=$plantNumber'));
+    if(response.statusCode==200) {
+      if (jsonDecode(response.body)) {
+        return "ON";
+      }
+      else {
+        return "OFF";
+      }
+    }
+    else
+      return "!";
   }
 }
