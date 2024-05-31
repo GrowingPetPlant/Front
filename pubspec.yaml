@@ -43,7 +43,7 @@ dev_dependencies:
   http : ^0.13.3
   table_calendar: ^3.0.6
   intl: ^0.17.0
-  fl_chart: ^0.40.0
+  fl_chart: ^0.60.0
 
 
   flutter_lints: ^3.0.0
