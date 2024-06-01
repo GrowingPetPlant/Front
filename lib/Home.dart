@@ -355,6 +355,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                               ),
                               IconButton(
                                 onPressed: () {
+                                  _fetchMoisture();
                                   _fetchHumi();
                                   _fetchMoisture();
                                   _fetchTemperature();
