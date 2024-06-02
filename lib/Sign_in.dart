@@ -72,36 +72,36 @@ class Sign_in_view extends State<Sign_in> {
         );
         return; // 아이디가 중복되면 회원가입 진행 중지
       }
-        // 아이디가 중복이 아니라면 회원가입 요청 진행
-        bool isRegistered = await dbService.register(SignupRequest(
-          id: _idController.text.trim(),
-          password: _passwordController.text.trim(),
-          userName: _userNameController.text.trim(),
-          phoneNumber: _phoneNumberController.text.trim(),
-          plantType: selectedDropdown!,
-          plantName: _plantNameController.text.trim(),
-        ));
-        if (isRegistered) {
-          // 회원가입에 성공하면 로그인 화면으로 이동
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Log_in()), // 로그인 화면으로 이동
-          );
-          // 회원가입 성공 메시지 표시
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('회원가입에 성공했습니다.'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('회원가입에 실패했습니다.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+      // 아이디가 중복이 아니라면 회원가입 요청 진행
+      bool isRegistered = await dbService.register(SignupRequest(
+        id: _idController.text.trim(),
+        password: _passwordController.text.trim(),
+        userName: _userNameController.text.trim(),
+        phoneNumber: _phoneNumberController.text.trim(),
+        plantType: selectedDropdown!,
+        plantName: _plantNameController.text.trim(),
+      ));
+      if (isRegistered) {
+        // 회원가입에 성공하면 로그인 화면으로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Log_in()), // 로그인 화면으로 이동
+        );
+        // 회원가입 성공 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('회원가입에 성공했습니다.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('회원가입에 실패했습니다.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -502,7 +502,7 @@ class Sign_in_view extends State<Sign_in> {
       //로그인 버튼
       bottomNavigationBar: Container(
         color: const Color(0xfff2f2f2),
-        margin: const EdgeInsets.only(bottom: 60),
+        margin: const EdgeInsets.only(bottom: 25),
         child: BottomAppBar(
           elevation: 0,
           color: const Color(0xFFF2F2F2),
