@@ -1,23 +1,17 @@
-import 'dart:convert';
-import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mypetplant/calender.dart';
 import 'package:mypetplant/mypage.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
-
 import 'package:mypetplant/status.dart';
 import 'package:mypetplant/status_service.dart';
 
 String? ifWatered;
 String water = "";
-String _light="";
-String _fan="";
+String _light = "";
+String _fan = "";
 
 //백그라운드 -> 포그라운드 : resume
 class Home extends StatefulWidget {
@@ -40,6 +34,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   int? _moisture; //습도 저장할 변수
   int? _humidity; //비옥도 저장할 변수
   int? _days; //자란 일수 저장할 변수
+  String _plantImage = 'assets/images/plant1.png'; // 기본 식물 이미지
 
   List<DateTime>? wateringDates = [];
 
@@ -83,7 +78,6 @@ class home extends State<Home> with WidgetsBindingObserver {
 
   void _updateBackgroundImage() {
     DateTime now = DateTime.now();
-    // final now = DateTime(2024, 5, 20, 19);    //test용
     final isNight = now.hour >= 19 || now.hour < 6;
     final newBackgroundImage =
         isNight ? 'assets/images/home-night.png' : 'assets/images/home-day.png';
@@ -123,9 +117,9 @@ class home extends State<Home> with WidgetsBindingObserver {
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     String iso8601String_today = today.toIso8601String();
-    if (!wateringDate!.isEmpty) {
+    if (wateringDate != null && wateringDate.isNotEmpty) {
       ifWatered = await dbService.putwater(PostWateringReq(
-          plantNumber: userPlant!.plantNumber,
+          plantNumber: userPlant.plantNumber,
           wateringDate: iso8601String_today));
     } else {
       ifWatered = "물을 주시겠습니까?";
@@ -133,7 +127,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     waterDialog(
         context,
         PostWateringReq(
-            plantNumber: userPlant!.plantNumber,
+            plantNumber: userPlant.plantNumber,
             wateringDate: iso8601String_today));
   }
 
@@ -196,17 +190,18 @@ class home extends State<Home> with WidgetsBindingObserver {
             await statusService.fetchGrowingDays(userPlant.plantNumber);
         setState(() {
           _days = status.days;
+          _updatePlantImage();
         });
       }
     }
   }
 
-  void _fetchLighting() async{
-    if(widget.userNumber != null){
+  void _fetchLighting() async {
+    if (widget.userNumber != null) {
       UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
       UserPlant? userPlant = await findUserPlant(userNumber);
 
-      if(userPlant!=null){
+      if (userPlant != null) {
         String light = await statusService.isLighted(userPlant.plantNumber);
         setState(() {
           _light = light;
@@ -215,12 +210,12 @@ class home extends State<Home> with WidgetsBindingObserver {
     }
   }
 
-  void _fetchFanning() async{
-    if(widget.userNumber != null){
+  void _fetchFanning() async {
+    if (widget.userNumber != null) {
       UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
       UserPlant? userPlant = await findUserPlant(userNumber);
 
-      if(userPlant!=null){
+      if (userPlant != null) {
         String fan = await statusService.isFanned(userPlant.plantNumber);
         setState(() {
           _fan = fan;
@@ -229,6 +224,19 @@ class home extends State<Home> with WidgetsBindingObserver {
     }
   }
 
+  void _updatePlantImage() {
+    if (_days != null) {
+      if (_days! <= 10) {
+        _plantImage = 'assets/images/plant1.png';
+      } else if (_days! <= 20) {
+        _plantImage = 'assets/images/plant2.png';
+      } else if (_days! <= 30) {
+        _plantImage = 'assets/images/plant3.png';
+      } else if (_days! >= 40) {
+        _plantImage = 'assets/images/plant4.png';
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +244,7 @@ class home extends State<Home> with WidgetsBindingObserver {
         title: 'Home',
         home: Scaffold(
             appBar: PreferredSize(
-              preferredSize: const ui.Size.fromHeight(0),
+              preferredSize: const Size.fromHeight(0),
               child: AppBar(backgroundColor: _appBarColor),
             ),
             body: Stack(children: <Widget>[
@@ -245,48 +253,47 @@ class home extends State<Home> with WidgetsBindingObserver {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage(_backgroundImage),
-                          fit: BoxFit.cover)),
+                          fit: BoxFit.cover))),
 
-                  // 닉네임
-                  child: Align(
-                    alignment: const Alignment(0, 0.4),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 5),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                            color: Colors.black45),
-                        child: TextButton(
-                          onPressed: () async {
-                            UserNumber userNumber;
-                            if (widget.userNumber != null)
-                              userNumber =
-                                  UserNumber(userNumber: widget.userNumber);
-                            else
-                              userNumber = UserNumber(userNumber: null);
-                            UserPlant? userplant =
-                                await findUserPlant(userNumber);
-                            wateringDates = await fetchWarteringDates(
-                                userplant!.plantNumber);
+              // 닉네임
+              Align(
+                alignment: const Alignment(0, 0.4),
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 5),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                        color: Colors.black45),
+                    child: TextButton(
+                      onPressed: () async {
+                        UserNumber userNumber;
+                        if (widget.userNumber != null)
+                          userNumber =
+                              UserNumber(userNumber: widget.userNumber);
+                        else
+                          userNumber = UserNumber(userNumber: null);
+                        UserPlant? userplant = await findUserPlant(userNumber);
+                        wateringDates =
+                            await fetchWarteringDates(userplant!.plantNumber);
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => calender(
-                                        wateredDate: wateringDates,
-                                      )),
-                            );
-                          },
-                          child: Text(
-                            widget.plantName!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )),
-                  )),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => calender(
+                                    wateredDate: wateringDates,
+                                  )),
+                        );
+                      },
+                      child: Text(
+                        widget.plantName!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )),
+              ),
 
               // 상태바
               Container(
@@ -355,6 +362,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                               ),
                               IconButton(
                                 onPressed: () {
+                                  _fetchMoisture();
                                   _fetchHumi();
                                   _fetchMoisture();
                                   _fetchTemperature();
@@ -554,9 +562,19 @@ class home extends State<Home> with WidgetsBindingObserver {
                     ],
                   )),
 
+              // 식물 이미지
+              Align(
+                alignment: const Alignment(0, -0.135), // 화분 위에 위치하도록 설정
+                child: Image.asset(
+                  _plantImage,
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+
               // 제어 dock
-                Container(
-                  margin: EdgeInsets.all(10),
+              Container(
+                  margin: EdgeInsets.only(bottom: 20),
                   alignment: Alignment.bottomCenter,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -566,135 +584,131 @@ class home extends State<Home> with WidgetsBindingObserver {
                         children: [
                           // 급수 text
                           Container(
-                            width: 80,
-                            height: 20,
-                            child: Align(
-                              child: Stack(
-                                children: [
-                                  // 흰색 테두리 효과를 위한 텍스트
-                                  Text(
-                                    "OFF",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      foreground: Paint()
-                                        ..style = PaintingStyle.stroke
-                                        ..strokeWidth = 3
-                                        ..color =
-                                          Colors.white, // 흰색 텍스트 스트로크
-                                          shadows: const [
-                                            Shadow(
-                                              blurRadius: 2,
-                                              color: Colors.white, // 흰색 테두리
-                                            ),
-                                          ],
+                              width: 80,
+                              height: 20,
+                              child: Align(
+                                child: Stack(
+                                  children: [
+                                    // 흰색 테두리 효과를 위한 텍스트
+                                    Text(
+                                      "OFF",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 3
+                                          ..color = Colors.white, // 흰색 텍스트 스트로크
+                                        shadows: const [
+                                          Shadow(
+                                            blurRadius: 2,
+                                            color: Colors.white, // 흰색 테두리
+                                          ),
+                                        ],
                                       ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  // 원래의 검정색 텍스트
-                                  Text(
-                                    "OFF",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.black, // 검정색 텍스트
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    // 원래의 검정색 텍스트
+                                    const Text(
+                                      "OFF",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black, // 검정색 텍스트
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
-                              )
-                            ),
+                              )),
 
-                          Container( // 조명 text
-                            width: 80,
-                            height: 20,
-                            child: Align(
-                              child: Stack(
-                                children: [
-                                  // 흰색 테두리 효과를 위한 텍스트
-                                  Text(
-                                    _light,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      foreground: Paint()
-                                        ..style = PaintingStyle.stroke
-                                        ..strokeWidth = 3
-                                        ..color =
-                                          Colors.white, // 흰색 텍스트 스트로크
-                                          shadows: const [
-                                            Shadow(
-                                              blurRadius: 2,
-                                              color: Colors.white, // 흰색 테두리
-                                            ),
-                                          ],
+                          Container(
+                              // 조명 text
+                              width: 80,
+                              height: 20,
+                              child: Align(
+                                child: Stack(
+                                  children: [
+                                    // 흰색 테두리 효과를 위한 텍스트
+                                    Text(
+                                      _light,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 3
+                                          ..color = Colors.white, // 흰색 텍스트 스트로크
+                                        shadows: const [
+                                          Shadow(
+                                            blurRadius: 2,
+                                            color: Colors.white, // 흰색 테두리
+                                          ),
+                                        ],
                                       ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  // 원래의 검정색 텍스트
-                                  Text(
-                                    _light,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.black, // 검정색 텍스트
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    // 원래의 검정색 텍스트
+                                    Text(
+                                      _light,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black, // 검정색 텍스트
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
-                              )
-                            ),
+                              )),
 
-                          Container( // 환풍 text
-                            width: 80,
-                            height: 20,
-                            child: Align(
-                              child: Stack(
-                                children: [
-                                  // 흰색 테두리 효과를 위한 텍스트
-                                  Text(
-                                    _fan,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      foreground: Paint()
-                                        ..style = PaintingStyle.stroke
-                                        ..strokeWidth = 3
-                                        ..color =
-                                          Colors.white, // 흰색 텍스트 스트로크
-                                          shadows: const [
-                                            Shadow(
-                                              blurRadius: 2,
-                                              color: Colors.white, // 흰색 테두리
-                                            ),
-                                          ],
+                          Container(
+                              // 환풍 text
+                              width: 80,
+                              height: 20,
+                              child: Align(
+                                child: Stack(
+                                  children: [
+                                    // 흰색 테두리 효과를 위한 텍스트
+                                    Text(
+                                      _fan,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 3
+                                          ..color = Colors.white, // 흰색 텍스트 스트로크
+                                        shadows: const [
+                                          Shadow(
+                                            blurRadius: 2,
+                                            color: Colors.white, // 흰색 테두리
+                                          ),
+                                        ],
                                       ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  // 원래의 검정색 텍스트
-                                   Text(
-                                    _fan,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.black, // 검정색 텍스트
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    // 원래의 검정색 텍스트
+                                    Text(
+                                      _fan,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black, // 검정색 텍스트
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
-                              )
-                            ),
+                              )),
 
-                          Container( // 마이페이지 text
+                          Container(
+                            // 마이페이지 text
                             width: 80,
                             height: 20,
-                            ),
-                          ],
-                        ),
-                      
+                          ),
+                        ],
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -707,8 +721,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                               width: 80,
                               height: 80,
                               decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    20)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
@@ -723,19 +737,21 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                           // 조명
                           IconButton(
-                            onPressed: () async{
-                              UserPlant? userplant = await findUserPlant(UserNumber(userNumber : widget!.userNumber));
-                              String light = await statusService.lighting(userplant!.plantNumber);
-                              setState((){
+                            onPressed: () async {
+                              UserPlant? userplant = await findUserPlant(
+                                  UserNumber(userNumber: widget.userNumber));
+                              String light = await statusService
+                                  .lighting(userplant!.plantNumber);
+                              setState(() {
                                 _light = light;
                               });
-                              },
+                            },
                             icon: Container(
                               width: 80,
                               height: 80,
                               decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    20)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
@@ -750,10 +766,12 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                           // 환풍
                           IconButton(
-                            onPressed: () async{
-                              UserPlant? userplant = await findUserPlant(UserNumber(userNumber : widget!.userNumber));
-                              String fan = await statusService.fanning(userplant!.plantNumber);
-                              setState((){
+                            onPressed: () async {
+                              UserPlant? userplant = await findUserPlant(
+                                  UserNumber(userNumber: widget.userNumber));
+                              String fan = await statusService
+                                  .fanning(userplant!.plantNumber);
+                              setState(() {
                                 _fan = fan;
                               });
                             },
@@ -761,8 +779,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                               width: 80,
                               height: 80,
                               decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    20)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
@@ -776,61 +794,58 @@ class home extends State<Home> with WidgetsBindingObserver {
                           ),
 
                           // 마이페이지
-                      IconButton(
-                        onPressed: () async {
-                          UserNumber userNumber;
-                          if (widget.userNumber != null)
-                            userNumber =
-                                UserNumber(userNumber: widget.userNumber);
-                          else
-                            userNumber = UserNumber(userNumber: null);
-                          UserInfo? userInfo = await findUser(userNumber);
-                          UserPlant? userplant =
-                              await findUserPlant(userNumber);
-                          if (userplant != null && userInfo != null) {
-                            UserInfo_plant userinfo = UserInfo_plant(
-                                userNumber: widget.userNumber!,
-                                id: userInfo.id,
-                                password: userInfo.password,
-                                userName: userInfo.userName,
-                                phoneNumber: userInfo.phoneNumber,
-                                plantType: userplant.plantType,
-                                plantName: userplant.plantName);
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      My_page(userInfo_plant: userinfo)),
-                            );
-                          }
-                        },
-                        icon: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/mypage.png',
-                              width: 55,
-                              height: 55,
+                          IconButton(
+                            onPressed: () async {
+                              UserNumber userNumber;
+                              if (widget.userNumber != null)
+                                userNumber =
+                                    UserNumber(userNumber: widget.userNumber);
+                              else
+                                userNumber = UserNumber(userNumber: null);
+                              UserInfo? userInfo = await findUser(userNumber);
+                              UserPlant? userplant =
+                                  await findUserPlant(userNumber);
+                              if (userplant != null && userInfo != null) {
+                                UserInfo_plant userinfo = UserInfo_plant(
+                                    userNumber: widget.userNumber!,
+                                    id: userInfo.id,
+                                    password: userInfo.password,
+                                    userName: userInfo.userName,
+                                    phoneNumber: userInfo.phoneNumber,
+                                    plantType: userplant.plantType,
+                                    plantName: userplant.plantName);
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          My_page(userInfo_plant: userinfo)),
+                                );
+                              }
+                            },
+                            icon: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/mypage.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-
                         ],
                       )
-                    ],)
-                  )
-              ]
-            )
-          )
-      );
-    }
+                    ],
+                  ))
+            ])));
   }
+}
 
 void waterDialog(context, PostWateringReq postWateringReq) {
   showDialog(
