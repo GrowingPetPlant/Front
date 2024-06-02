@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'status.dart';
 
 //String address = "http://localhost:8080";
-String address = "http://172.30.1.82:8080";
+//String address = "http://172.30.1.82:8080";
+String address = "http://35.216.120.157:8080";
 
 class StatusService {
   //온도
@@ -55,58 +56,56 @@ class StatusService {
   }
 
   //전구버튼 누르면 실행할거
-  Future<String> lighting(int plantNumber) async{
-    final response = await http.post(Uri.parse('$address/arduino/lighting?plantNumber=$plantNumber'));
-    if(response.statusCode == 200) {
+  Future<String> lighting(int plantNumber) async {
+    final response = await http
+        .post(Uri.parse('$address/arduino/lighting?plantNumber=$plantNumber'));
+    if (response.statusCode == 200) {
       if (jsonDecode(response.body))
         return "ON";
       else
         return "OFF";
-    }
-    else
+    } else
       return "!";
   }
 
   //홈화면 넘어갈 때 실행할거
-  Future<String> isLighted(int plantNumber) async{
-    final response = await http.get(Uri.parse('$address/status/isLighted?plantNumber=$plantNumber'));
-    if(response.statusCode==200) {
+  Future<String> isLighted(int plantNumber) async {
+    final response = await http
+        .get(Uri.parse('$address/status/isLighted?plantNumber=$plantNumber'));
+    if (response.statusCode == 200) {
       if (jsonDecode(response.body)) {
         return "ON";
-      }
-      else {
+      } else {
         return "OFF";
       }
-    }
-    else
+    } else
       return "!";
   }
 
   //팬 버튼 누르면 실행할거
-  Future<String> fanning(int plantNumber) async{
-    final response = await http.post(Uri.parse('$address/arduino/fanning?plantNumber=$plantNumber'));
-    if(response.statusCode == 200) {
+  Future<String> fanning(int plantNumber) async {
+    final response = await http
+        .post(Uri.parse('$address/arduino/fanning?plantNumber=$plantNumber'));
+    if (response.statusCode == 200) {
       if (jsonDecode(response.body))
         return "ON";
       else
         return "OFF";
-    }
-    else
+    } else
       return "!";
   }
 
   //홈화면 넘어갈 때 실행할거
-  Future<String> isFanned(int plantNumber) async{
-    final response = await http.get(Uri.parse('$address/status/isFanned?plantNumber=$plantNumber'));
-    if(response.statusCode==200) {
+  Future<String> isFanned(int plantNumber) async {
+    final response = await http
+        .get(Uri.parse('$address/status/isFanned?plantNumber=$plantNumber'));
+    if (response.statusCode == 200) {
       if (jsonDecode(response.body)) {
         return "ON";
-      }
-      else {
+      } else {
         return "OFF";
       }
-    }
-    else
+    } else
       return "!";
   }
 }
