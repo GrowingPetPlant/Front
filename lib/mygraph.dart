@@ -55,9 +55,11 @@ class MyBarGraph extends StatelessWidget {
     List max_rangeY = count;
     List min_rangeY = count;
 
-    double _maxY = 250; //y축 최대값 지정
+    double _maxY = max_rangeY
+        .reduce((current, next) => current > next ? current : next); //y축 최대값 지정
 
-    double _minY = 10; // y축 최소값 지정
+    double _minY = min_rangeY.reduce(
+        (current, next) => current < next ? current : next); // y축 최소값 지정
 
     return BarChart(BarChartData(
       maxY: _maxY,
