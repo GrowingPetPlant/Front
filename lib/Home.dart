@@ -1,16 +1,10 @@
-import 'dart:convert';
-import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mypetplant/calender.dart';
 import 'package:mypetplant/mypage.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
-
 import 'package:mypetplant/status.dart';
 import 'package:mypetplant/status_service.dart';
 
@@ -40,6 +34,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   int? _moisture; //습도 저장할 변수
   int? _humidity; //비옥도 저장할 변수
   int? _days; //자란 일수 저장할 변수
+  String _plantImage = 'assets/images/plant1.png'; // 기본 식물 이미지
 
   List<DateTime>? wateringDates = [];
 
@@ -83,7 +78,6 @@ class home extends State<Home> with WidgetsBindingObserver {
 
   void _updateBackgroundImage() {
     DateTime now = DateTime.now();
-    // final now = DateTime(2024, 5, 20, 19);    //test용
     final isNight = now.hour >= 19 || now.hour < 6;
     final newBackgroundImage =
         isNight ? 'assets/images/home-night.png' : 'assets/images/home-day.png';
@@ -123,9 +117,9 @@ class home extends State<Home> with WidgetsBindingObserver {
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     String iso8601String_today = today.toIso8601String();
-    if (!wateringDate!.isEmpty) {
+    if (wateringDate != null && wateringDate.isNotEmpty) {
       ifWatered = await dbService.putwater(PostWateringReq(
-          plantNumber: userPlant!.plantNumber,
+          plantNumber: userPlant.plantNumber,
           wateringDate: iso8601String_today));
     } else {
       ifWatered = "물을 주시겠습니까?";
@@ -133,7 +127,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     waterDialog(
         context,
         PostWateringReq(
-            plantNumber: userPlant!.plantNumber,
+            plantNumber: userPlant.plantNumber,
             wateringDate: iso8601String_today));
   }
 
@@ -196,6 +190,7 @@ class home extends State<Home> with WidgetsBindingObserver {
             await statusService.fetchGrowingDays(userPlant.plantNumber);
         setState(() {
           _days = status.days;
+          _updatePlantImage();
         });
       }
     }
@@ -229,13 +224,27 @@ class home extends State<Home> with WidgetsBindingObserver {
     }
   }
 
+  void _updatePlantImage() {
+    if (_days != null) {
+      if (_days! <= 10) {
+        _plantImage = 'assets/images/plant1.png';
+      } else if (_days! <= 20) {
+        _plantImage = 'assets/images/plant2.png';
+      } else if (_days! <= 30) {
+        _plantImage = 'assets/images/plant3.png';
+      } else if (_days! >= 40) {
+        _plantImage = 'assets/images/plant4.png';
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Home',
         home: Scaffold(
             appBar: PreferredSize(
-              preferredSize: const ui.Size.fromHeight(0),
+              preferredSize: const Size.fromHeight(0),
               child: AppBar(backgroundColor: _appBarColor),
             ),
             body: Stack(children: <Widget>[
@@ -244,48 +253,47 @@ class home extends State<Home> with WidgetsBindingObserver {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage(_backgroundImage),
-                          fit: BoxFit.cover)),
+                          fit: BoxFit.cover))),
 
-                  // 닉네임
-                  child: Align(
-                    alignment: const Alignment(0, 0.4),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 5),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                            color: Colors.black45),
-                        child: TextButton(
-                          onPressed: () async {
-                            UserNumber userNumber;
-                            if (widget.userNumber != null)
-                              userNumber =
-                                  UserNumber(userNumber: widget.userNumber);
-                            else
-                              userNumber = UserNumber(userNumber: null);
-                            UserPlant? userplant =
-                                await findUserPlant(userNumber);
-                            wateringDates = await fetchWarteringDates(
-                                userplant!.plantNumber);
+              // 닉네임
+              Align(
+                alignment: const Alignment(0, 0.4),
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 5),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                        color: Colors.black45),
+                    child: TextButton(
+                      onPressed: () async {
+                        UserNumber userNumber;
+                        if (widget.userNumber != null)
+                          userNumber =
+                              UserNumber(userNumber: widget.userNumber);
+                        else
+                          userNumber = UserNumber(userNumber: null);
+                        UserPlant? userplant = await findUserPlant(userNumber);
+                        wateringDates =
+                            await fetchWarteringDates(userplant!.plantNumber);
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => calender(
-                                        wateredDate: wateringDates,
-                                      )),
-                            );
-                          },
-                          child: Text(
-                            widget.plantName!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )),
-                  )),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => calender(
+                                    wateredDate: wateringDates,
+                                  )),
+                        );
+                      },
+                      child: Text(
+                        widget.plantName!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )),
+              ),
 
               // 상태바
               Container(
@@ -554,9 +562,19 @@ class home extends State<Home> with WidgetsBindingObserver {
                     ],
                   )),
 
+              // 식물 이미지
+              Align(
+                alignment: const Alignment(0, -0.135), // 화분 위에 위치하도록 설정
+                child: Image.asset(
+                  _plantImage,
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+
               // 제어 dock
               Container(
-                  margin: EdgeInsets.all(15),
+                  margin: EdgeInsets.only(bottom: 20),
                   alignment: Alignment.bottomCenter,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -721,7 +739,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                           IconButton(
                             onPressed: () async {
                               UserPlant? userplant = await findUserPlant(
-                                  UserNumber(userNumber: widget!.userNumber));
+                                  UserNumber(userNumber: widget.userNumber));
                               String light = await statusService
                                   .lighting(userplant!.plantNumber);
                               setState(() {
@@ -750,7 +768,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                           IconButton(
                             onPressed: () async {
                               UserPlant? userplant = await findUserPlant(
-                                  UserNumber(userNumber: widget!.userNumber));
+                                  UserNumber(userNumber: widget.userNumber));
                               String fan = await statusService
                                   .fanning(userplant!.plantNumber);
                               setState(() {

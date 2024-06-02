@@ -4,7 +4,7 @@ import 'user.dart';
 
 //String address = "http://172.30.1.82:8080";
 //String address = "http://localhost:8080";
-String address = "http://34.64.133.248:8080";
+String address = "http://35.216.120.157:8080";
 
 class DBService {
   //
