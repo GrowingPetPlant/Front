@@ -591,7 +591,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                   children: [
                                     // 흰색 테두리 효과를 위한 텍스트
                                     Text(
-                                      'ON',
+                                      "OFF",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -610,7 +610,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                     ),
                                     // 원래의 검정색 텍스트
                                     const Text(
-                                      'ON',
+                                      "OFF",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -631,7 +631,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                   children: [
                                     // 흰색 테두리 효과를 위한 텍스트
                                     Text(
-                                      'ON',
+                                      _light,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -649,8 +649,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                                       textAlign: TextAlign.center,
                                     ),
                                     // 원래의 검정색 텍스트
-                                    const Text(
-                                      'ON',
+                                    Text(
+                                      _light,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -671,7 +671,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                   children: [
                                     // 흰색 테두리 효과를 위한 텍스트
                                     Text(
-                                      'ON',
+                                      _fan,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -689,8 +689,8 @@ class home extends State<Home> with WidgetsBindingObserver {
                                       textAlign: TextAlign.center,
                                     ),
                                     // 원래의 검정색 텍스트
-                                    const Text(
-                                      'ON',
+                                    Text(
+                                      _fan,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
