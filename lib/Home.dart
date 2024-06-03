@@ -190,7 +190,7 @@ class home extends State<Home> with WidgetsBindingObserver {
             await statusService.fetchGrowingDays(userPlant.plantNumber);
         setState(() {
           _days = status.days;
-          _updatePlantImage();
+          _plantImage = _updatePlantImage()!;
         });
       }
     }
@@ -224,18 +224,20 @@ class home extends State<Home> with WidgetsBindingObserver {
     }
   }
 
-  void _updatePlantImage() {
+  String? _updatePlantImage() {
     if (_days != null) {
       if (_days! <= 10) {
-        _plantImage = 'assets/images/plant1.png';
+        return 'assets/images/plant1.png';
       } else if (_days! <= 20) {
-        _plantImage = 'assets/images/plant2.png';
+        return 'assets/images/plant2.png';
       } else if (_days! <= 30) {
-        _plantImage = 'assets/images/plant3.png';
+        return 'assets/images/plant3.png';
       } else if (_days! >= 40) {
-        _plantImage = 'assets/images/plant4.png';
+        return 'assets/images/plant4.png';
       }
     }
+    else
+      return 'assets/images/plant1.png';
   }
 
   @override
