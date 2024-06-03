@@ -343,7 +343,7 @@ Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async {
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       List<DateTime> fetchedDates =
-          data.map((date) => DateTime.parse(date)).toList();
+          data.where((date)=>date!=null).map((date) => DateTime.parse(date)).toList();
 
       return fetchedDates;
     } else {

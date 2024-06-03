@@ -38,7 +38,7 @@ class BarData {
 }
 
 class MyBarGraph extends StatelessWidget {
-  final List count;
+  final List<double> count;
   const MyBarGraph({super.key, required this.count});
 
   @override
@@ -55,11 +55,21 @@ class MyBarGraph extends StatelessWidget {
     List max_rangeY = count;
     List min_rangeY = count;
 
-    double _maxY = max_rangeY
-        .reduce((current, next) => current > next ? current : next); //y축 최대값 지정
+    //double _maxY = count[0]; // y축 최대값
+    //double _minY = count[0]; // y축 최소값
 
-    double _minY = min_rangeY.reduce(
-        (current, next) => current < next ? current : next); // y축 최소값 지정
+    //for (double element in count) {
+    //  if (element < _minY) {
+    //    _minY = element;
+    //  }
+    //  if (element > _maxY) {
+    //    _maxY = element;
+    //  }
+    //}
+
+    double _maxY = (count.reduce(max)/5).ceil()*5;
+    double _minY = (count.reduce(min)/5).floor()*5;
+
 
     return BarChart(BarChartData(
       maxY: _maxY,
@@ -72,25 +82,25 @@ class MyBarGraph extends StatelessWidget {
               sideTitles: SideTitles(showTitles: false),
               drawBehindEverything: true),
           leftTitles: AxisTitles(
-              //좌측 y축 레이블
+            //좌측 y축 레이블
               sideTitles: SideTitles(
                   showTitles: true, getTitlesWidget: leftTitleWidgets)),
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
-              //하단 x축 레이블
+            //하단 x축 레이블
               sideTitles: SideTitles(
                   showTitles: true, getTitlesWidget: getBottomTitles))),
       backgroundColor: Color.fromRGBO(237, 246, 184, 1), // 그래프 배경 색
       barGroups: myBarData.barData
           .map((data) => BarChartGroupData(x: data.x, barRods: [
-                BarChartRodData(
-                  //차트 바 스타일
-                  toY: data.y,
-                  color: const Color(0xFF81AE17),
-                  width: 25,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ]))
+        BarChartRodData(
+          //차트 바 스타일
+          toY: data.y,
+          color: const Color(0xFF81AE17),
+          width: 25,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ]))
           .toList(),
     ));
   }

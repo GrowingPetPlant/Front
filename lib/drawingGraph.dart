@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 //String address = "http://localhost:8080";
 //String address = "http://172.30.1.82:8080";
-String address = "http://34.64.133.248:8080";
+String address = "http://35.216.120.157:8080";
 
 class drawingGraph {
   //온도
@@ -14,8 +14,7 @@ class drawingGraph {
         Uri.parse('$address/graph/display?date=$iso8601String_selectedDay'));
 
     if (response.statusCode == 200) {
-      if (response.body !=
-          null) //그래프정보불러오기 성공해서 DB에 값 있는 경우(오늘날짜 전 날짜는 없으면 모든 값 0으로 DB생성해서 return)
+      if (response.body != null) //그래프정보불러오기 성공해서 DB에 값 있는 경우(오늘날짜 전 날짜는 없으면 모든 값 0으로 DB생성해서 return)
         return GraphInfo.fromJson(jsonDecode(response.body));
       else //그래프정보불러오기 성공했는데 DB에 값 없는 경우(오늘날짜 이후 날짜들은 null반환해서 DB생성 안하고 그래프 0으로 띄우기)
         return GraphInfo(
