@@ -20,14 +20,14 @@ https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
 
 ### ✏️Technical Stack
 <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
-<img src="https://img.shields.io/badge/dart-0175C2=for-the-badge&logo=dart&logoColor=white">
-<img src="https://img.shields.io/badge/github-F05032=for-the-badge&logo=github&logoColor=white">
-<img src="https://img.shields.io/badge/notion-000000=for-the-badge&logo=notion&logoColor=white">
+<img src="https://img.shields.io/badge/dart-0175C2?style=for-the-badge&logo=dart&logoColor=white">
+<img src="https://img.shields.io/badge/github-F05032?style=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
 
 <br>
 
 ### ✏️주요 기능
-#### - 로그인
+### - 로그인
 ### - 회원가입
 ##### - 식물 키우는 홈 화면
 ### - 식물의 상세정보를 주는 캘린더/차트 화면
