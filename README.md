@@ -16,7 +16,9 @@ https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
 #### 집에서 쉽게 나만의 식물을 키울 수 있는 반려 식물 키우기 앱입니다.
 #### 핸드폰으로 온도, 습도, 비옥도를 조절하며 나만의 식물을 키워보세요!
 
+<img src="https://img.shields.io/badge/Flutter-#02569B?style=for-the-badge&logo=Flutter&logoColor=white">
 
+<br>
 
 ### 깃허브 협업
 
