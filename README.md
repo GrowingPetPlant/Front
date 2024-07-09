@@ -4,11 +4,18 @@
 
 ## 📌 Notion
 https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
-
+<br>
 
 ## 📌 동영상 삽입 예제 설명
 #### [GrowingPetPlant⬇️](https://youtu.be/tYKX8im01rE)
 <a href="https://youtu.be/GKlMWVufCGE"><img src="https://github.com/GrowingPetPlant/Front/assets/107312651/1b2ea40e-6151-4f9f-8696-5a3f6c26ecf5" width="30%" height="30%"/></a>
+<br>
+
+## 📌 프로젝트 소개
+### ✏️설명
+#### 집에서 쉽게 나만의 식물을 키울 수 있는 반려 식물 키우기 앱입니다.
+#### 핸드폰으로 온도, 습도, 비옥도를 조절하며 나만의 식물을 키워보세요!
+
 
 
 ### 깃허브 협업
