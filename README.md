@@ -16,7 +16,24 @@ https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
 #### 집에서 쉽게 나만의 식물을 키울 수 있는 반려 식물 키우기 앱입니다.
 #### 핸드폰으로 온도, 습도, 비옥도를 조절하며 나만의 식물을 키워보세요!
 
+<br>
+
+### ✏️Technical Stack
 <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
+<img src="https://img.shields.io/badge/dart-0175C2=for-the-badge&logo=dart&logoColor=white">
+<img src="https://img.shields.io/badge/github-F05032=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/notion-000000=for-the-badge&logo=notion&logoColor=white">
+
+<br>
+
+### ✏️주요 기능
+#### - 로그인
+### - 회원가입
+##### - 식물 키우는 홈 화면
+### - 식물의 상세정보를 주는 캘린더/차트 화면
+### - 아이디 찾기 화면
+### - 비밀번호 찾기
+### - 마이페이지 
 
 <br>
 
