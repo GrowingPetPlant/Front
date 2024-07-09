@@ -2,13 +2,14 @@
 ### 반려식물 키우기 - 프론트엔드
 ![Project Logo](https://github.com/GrowingPetPlant/Front/assets/107312651/5971be0a-ce3e-4fab-a659-5d3ee0e73369)
 
-### Notion
-https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81)
+## 📌 Notion
+https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
 
 
-### 동영상 삽입 예제 설명
+## 📌 동영상 삽입 예제 설명
+#### [GrowingPetPlant⬇️](https://youtu.be/tYKX8im01rE)
+<a href="https://youtu.be/GKlMWVufCGE"><img src="https://github.com/GrowingPetPlant/Front/assets/107312651/1b2ea40e-6151-4f9f-8696-5a3f6c26ecf5" width="30%" height="30%"/></a>
 
-- ![데모 영상](https://youtu.be/tYKX8im01rE
 
 ### 깃허브 협업
 
