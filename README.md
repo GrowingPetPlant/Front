@@ -3,7 +3,7 @@
 
 https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
 
-
+![Project Logo](https://github.com/GrowingPetPlant/Front/assets/107312651/5971be0a-ce3e-4fab-a659-5d3ee0e73369)
 ### 깃허브 협업
 
     1. 코드를 다운받을 local 위치에서 git clone
