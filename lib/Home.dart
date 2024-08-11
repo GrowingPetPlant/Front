@@ -7,6 +7,7 @@ import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 import 'package:mypetplant/status.dart';
 import 'package:mypetplant/status_service.dart';
+import 'package:mypetplant/widget.dart';
 
 String? ifWatered;
 String water = "";
@@ -235,8 +236,7 @@ class home extends State<Home> with WidgetsBindingObserver {
       } else if (_days! >= 40) {
         return 'assets/images/plant4.png';
       }
-    }
-    else
+    } else
       return 'assets/images/plant1.png';
   }
 
@@ -287,7 +287,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                         );
                       },
                       child: Text(
-                        widget.plantName!,
+                        "토메이토",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
@@ -380,129 +380,14 @@ class home extends State<Home> with WidgetsBindingObserver {
                           )),
 
                       // 대기 습도
-                      SizedBox(
-                          width: 280,
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/humi.png'),
-                                        fit: BoxFit.cover)),
-                              ),
-                              Container(
-                                  padding: const EdgeInsets.all(3),
-                                  child: Align(
-                                    child: Stack(
-                                      children: [
-                                        // 흰색 테두리 효과를 위한 텍스트
-                                        Text(
-                                          _humidity != null
-                                              ? '$_humidity%'
-                                              : 'Loading...',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            foreground: Paint()
-                                              ..style = PaintingStyle.stroke
-                                              ..strokeWidth = 3
-                                              ..color =
-                                                  Colors.white, // 흰색 텍스트 스트로크
-                                            shadows: const [
-                                              Shadow(
-                                                blurRadius: 2,
-                                                color: Colors.white, // 흰색 테두리
-                                              ),
-                                            ],
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        // 원래의 검정색 텍스트
-                                        Text(
-                                          _humidity != null
-                                              ? '$_humidity%'
-                                              : 'Loading...',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.black, // 검정색 텍스트
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                            ],
-                          )),
-
+                      statusBar(
+                          image: 'assets/images/humi.png', data: _humidity),
                       // 토양 습도
-                      SizedBox(
-                          width: 280,
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/soil.png'),
-                                        fit: BoxFit.cover)),
-                              ),
-                              Container(
-                                  padding: const EdgeInsets.all(3),
-                                  child: Align(
-                                    child: Stack(
-                                      children: [
-                                        // 흰색 테두리 효과를 위한 텍스트
-                                        Text(
-                                          _moisture != null
-                                              ? '$_moisture%'
-                                              : 'Loading...',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            foreground: Paint()
-                                              ..style = PaintingStyle.stroke
-                                              ..strokeWidth = 3
-                                              ..color =
-                                                  Colors.white, // 흰색 텍스트 스트로크
-                                            shadows: const [
-                                              Shadow(
-                                                blurRadius: 2,
-                                                color: Colors.white, // 흰색 테두리
-                                              ),
-                                            ],
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        // 원래의 검정색 텍스트
-                                        Text(
-                                          _moisture != null
-                                              ? '$_moisture%'
-                                              : 'Loading...',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.black, // 검정색 텍스트
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                            ],
-                          )),
+                      statusBar(
+                          image: 'assets/images/soil.png', data: _moisture),
 
                       // D-day (자란 기간)
-                      SizedBox(
+                      /*SizedBox(
                           width: 280,
                           height: 50,
                           child: Row(
@@ -560,7 +445,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                     ),
                                   )),
                             ],
-                          )),
+                          )),*/
                     ],
                   )),
 
@@ -585,127 +470,13 @@ class home extends State<Home> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           // 급수 text
+                          controllText(text: "OFF"),
+                          // 조명 text
+                          controllText(text: _light),
+                          // 환풍 text
+                          controllText(text: _fan),
+                          // 마이페이지 text
                           Container(
-                              width: 80,
-                              height: 20,
-                              child: Align(
-                                child: Stack(
-                                  children: [
-                                    // 흰색 테두리 효과를 위한 텍스트
-                                    Text(
-                                      "OFF",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 3
-                                          ..color = Colors.white, // 흰색 텍스트 스트로크
-                                        shadows: const [
-                                          Shadow(
-                                            blurRadius: 2,
-                                            color: Colors.white, // 흰색 테두리
-                                          ),
-                                        ],
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    // 원래의 검정색 텍스트
-                                    const Text(
-                                      "OFF",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.black, // 검정색 텍스트
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
-                              )),
-
-                          Container(
-                              // 조명 text
-                              width: 80,
-                              height: 20,
-                              child: Align(
-                                child: Stack(
-                                  children: [
-                                    // 흰색 테두리 효과를 위한 텍스트
-                                    Text(
-                                      _light,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 3
-                                          ..color = Colors.white, // 흰색 텍스트 스트로크
-                                        shadows: const [
-                                          Shadow(
-                                            blurRadius: 2,
-                                            color: Colors.white, // 흰색 테두리
-                                          ),
-                                        ],
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    // 원래의 검정색 텍스트
-                                    Text(
-                                      _light,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.black, // 검정색 텍스트
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
-                              )),
-
-                          Container(
-                              // 환풍 text
-                              width: 80,
-                              height: 20,
-                              child: Align(
-                                child: Stack(
-                                  children: [
-                                    // 흰색 테두리 효과를 위한 텍스트
-                                    Text(
-                                      _fan,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 3
-                                          ..color = Colors.white, // 흰색 텍스트 스트로크
-                                        shadows: const [
-                                          Shadow(
-                                            blurRadius: 2,
-                                            color: Colors.white, // 흰색 테두리
-                                          ),
-                                        ],
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    // 원래의 검정색 텍스트
-                                    Text(
-                                      _fan,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.black, // 검정색 텍스트
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
-                              )),
-
-                          Container(
-                            // 마이페이지 text
                             width: 80,
                             height: 20,
                           ),
@@ -715,30 +486,16 @@ class home extends State<Home> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           // 급수
-                          IconButton(
+                          iconButton(
+                            image: 'assets/images/water.png',
                             onPressed: () {
                               _putWater();
-                            }, // 물주기
-                            icon: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/water.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
-                            ),
+                            },
                           ),
 
                           // 조명
-                          IconButton(
+                          iconButton(
+                            image: 'assets/images/lamp.png',
                             onPressed: () async {
                               UserPlant? userplant = await findUserPlant(
                                   UserNumber(userNumber: widget.userNumber));
@@ -748,26 +505,11 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 _light = light;
                               });
                             },
-                            icon: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/lamp.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
-                            ),
                           ),
 
                           // 환풍
-                          IconButton(
+                          iconButton(
+                            image: 'assets/images/fan.png',
                             onPressed: () async {
                               UserPlant? userplant = await findUserPlant(
                                   UserNumber(userNumber: widget.userNumber));
@@ -777,26 +519,11 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 _fan = fan;
                               });
                             },
-                            icon: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/fan.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
-                            ),
                           ),
 
                           // 마이페이지
-                          IconButton(
+                          iconButton(
+                            image: 'assets/images/mypage.png',
                             onPressed: () async {
                               UserNumber userNumber;
                               if (widget.userNumber != null)
@@ -824,22 +551,6 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 );
                               }
                             },
-                            icon: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/mypage.png',
-                                  width: 55,
-                                  height: 55,
-                                ),
-                              ),
-                            ),
                           ),
                         ],
                       )

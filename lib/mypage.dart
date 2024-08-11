@@ -9,6 +9,7 @@ import 'package:mypetplant/Home.dart';
 import 'package:mypetplant/Log_in.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
+import 'package:mypetplant/widget.dart';
 
 String text = "";
 
@@ -211,32 +212,11 @@ class _My_page_view extends State<My_page> {
           child: SingleChildScrollView(
             child: Container(
               child: Column(children: [
-                SizedBox(
-                    height: screenHeight * 0.15,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          height: screenHeight * 0.1,
-                        ),
-                        const Text('회원정보 수정',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF56280F))),
-                      ],
-                    )),
+                logoTitle(text: '회원정보 수정', screenHeight: screenHeight),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '아이디',
-                        style: TextStyle(fontSize: 11),
-                      ),
-                    ),
+                    titleInputBox(title: '아이디', screenHeight: screenHeight),
                     Container(
                       height: 50,
                       decoration: BoxDecoration(
@@ -262,21 +242,10 @@ class _My_page_view extends State<My_page> {
                   children: [
                     Row(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '비밀번호',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validPassword,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
-                        ),
+                        titleInputBox(
+                            title: '비밀번호', screenHeight: screenHeight),
+                        warningText(
+                            text: validPassword, screenHeight: screenHeight),
                       ],
                     ),
                     Container(
@@ -306,21 +275,9 @@ class _My_page_view extends State<My_page> {
                   children: [
                     Row(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '이름',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validName,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
-                        ),
+                        titleInputBox(title: '이름', screenHeight: screenHeight),
+                        warningText(
+                            text: validName, screenHeight: screenHeight),
                       ],
                     ),
                     Container(
@@ -349,21 +306,10 @@ class _My_page_view extends State<My_page> {
                   children: [
                     Row(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '전화번호',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validPhoneNumber,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
-                        ),
+                        titleInputBox(
+                            title: '전화번호', screenHeight: screenHeight),
+                        warningText(
+                            text: validPhoneNumber, screenHeight: screenHeight),
                       ],
                     ),
                     Container(
@@ -386,7 +332,7 @@ class _My_page_view extends State<My_page> {
                     ),
                   ],
                 ),
-                Column(
+                /*Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -472,7 +418,7 @@ class _My_page_view extends State<My_page> {
                       ),
                     ),
                   ],
-                ),
+                ),*/
               ]),
             ),
           ),

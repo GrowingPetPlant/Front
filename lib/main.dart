@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mypetplant/Find_id.dart';
+import 'package:mypetplant/Find_pw.dart';
 import 'package:mypetplant/Home.dart';
 import 'package:mypetplant/Sign_in.dart';
 import 'package:mypetplant/calender.dart';
