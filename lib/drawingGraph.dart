@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 //String address = "http://localhost:8080";
-//String address = "http://172.30.1.82:8080";
-String address = "http://35.216.120.157:8080";
+String address = "http://172.30.1.86:8080";
+//String address = "http://35.216.120.157:8080";
 
 class drawingGraph {
   //온도
