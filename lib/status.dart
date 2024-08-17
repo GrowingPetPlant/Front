@@ -1,38 +1,38 @@
 //온도
 class StatusTemp {
-  final int temperature;
+  final double temperature;
 
   StatusTemp({required this.temperature});
 
   factory StatusTemp.fromJson(dynamic json) {
     return StatusTemp(
-      temperature: json as int,
+      temperature: json as double,
     );
   }
 }
 
 //비옥도
 class StatusMoisture {
-  final int moisture;
+  final double moisture;
 
   StatusMoisture({required this.moisture});
 
   factory StatusMoisture.fromJson(dynamic json) {
     return StatusMoisture(
-      moisture: json as int,
+      moisture: json as double,
     );
   }
 }
 
 //대기
 class StatusHumi {
-  final int humidity;
+  final double humidity;
 
   StatusHumi({required this.humidity});
 
   factory StatusHumi.fromJson(dynamic json) {
     return StatusHumi(
-      humidity: json as int,
+      humidity: json as double,
     );
   }
 }

@@ -4,8 +4,10 @@ import 'package:mypetplant/Find_id.dart';
 import 'package:mypetplant/Find_pw.dart';
 import 'package:mypetplant/Home.dart';
 import 'package:mypetplant/Sign_in.dart';
+import 'package:mypetplant/token.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
+import 'package:mypetplant/widget.dart';
 
 class Log_in extends StatefulWidget {
   const Log_in({super.key});
@@ -33,16 +35,19 @@ class _Log_inState extends State<Log_in> {
     }
 
     // 로그인 시도
-    int? loginResult = await dbService.login(User(id: id, password: password));
+    await dbService.login(User(id: id, password: password));
 
-    if (loginResult != null) {
+    if (accessToken != null) {
       // 로그인 성공 시 Home 화면으로 이동
-      UserPlant? userplant = await findUserPlant(UserNumber(userNumber: loginResult));
-      String plantName = userplant!.plantName;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home(userNumber: loginResult, plantName : plantName)),
-      );
+      //UserPlant? userplant = await findUserPlant(UserNumber(userNumber: loginResult));
+      //String plantName = userplant!.plantName;
+      List<HomeInfo>? homeInfo = await dbService.home();
+      print(homeInfo);
+      if(homeInfo!=null)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Home(homeinfo: homeInfo, userNumber: homeInfo[0].userNumber)),
+        );
     } else {
       // 로그인 실패 시 사용자에게 알림
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,65 +62,23 @@ class _Log_inState extends State<Log_in> {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
       body: Padding(
-        padding: EdgeInsets.all(screenHeight*0.04),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 30,horizontal: 0),
-                  alignment: Alignment.center,
-                  child: const Image(
-                    image: AssetImage('assets/images/logo.png'),
-                    height: 100,
-                    alignment: Alignment.center,
-                  ),
-                ),
-
-                Container(
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0,0,0,10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFF81AE17), width: 2),
-                        ),
-                        child: SizedBox(
-                          height: 50, // 텍스트 필드 창 높이 조절
-                          child: TextField(
-                            controller: _idController,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: const InputDecoration(
-                            hintText: '아이디',
-                            contentPadding: EdgeInsets.fromLTRB(10,0,10,0),
-
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFF81AE17), width: 2),
-                      ),
-                      child : SizedBox(
-                        height: 50, // 텍스트 필드 창 높이 조절
-                        child: TextField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: const InputDecoration(
-                            hintText: '비밀번호',
-                            contentPadding: EdgeInsets.fromLTRB(10,0,10,0),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
+        padding: EdgeInsets.all(screenHeight * 0.04),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 0),
+            alignment: Alignment.center,
+            child: const Image(
+              image: AssetImage('assets/images/logo.png'),
+              height: 100,
+              alignment: Alignment.center,
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                inputBox(hint: '아이디', controller: _idController, margin: 10,),
+                inputBox(hint: '비밀번호', controller: _passwordController, margin: 10,obscure: true,),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -172,11 +135,10 @@ class _Log_inState extends State<Log_in> {
                     ),
                   ],
                 ),
-              ),
-
-            ]
           ),
-      ),
+              ]
+            ),
+          ),
 
         bottomNavigationBar:
           Container(

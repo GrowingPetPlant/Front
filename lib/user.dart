@@ -137,7 +137,7 @@ class SignupRequest {
   final String userName;
   final String phoneNumber;
   final String plantType;
-  final String plantName;
+  final String userPlantName;
 
   SignupRequest(
       {required this.id,
@@ -145,7 +145,7 @@ class SignupRequest {
         required this.userName,
         required this.phoneNumber,
         required this.plantType,
-        required this.plantName});
+        required this.userPlantName});
 
   Map<String, dynamic> toJson() {
     return {
@@ -154,7 +154,22 @@ class SignupRequest {
       'userName': userName,
       'phoneNumber': phoneNumber,
       'plantType': plantType,
-      'plantName': plantName,
+      'userPlantName': userPlantName,
+    };
+  }
+}
+
+class AddPlant {
+  final String plantType;
+  final String userPlantName;
+
+  AddPlant(
+      {required this.plantType, required this.userPlantName});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'plantType': plantType,
+      'userPlantName': userPlantName,
     };
   }
 }
@@ -173,5 +188,41 @@ class PostWateringReq{
       'plantNumber' : plantNumber,
       'wateringDate' : wateringDate
     };
+  }
+}
+
+class HomeInfo {
+  final int userNumber;
+  final int userPlantNumber;
+  final String userPlantName;
+  final String userPlantType;
+  final double moisture;
+  final double humidity;
+  final double temperature;
+
+  HomeInfo({required this.userNumber, required this.userPlantNumber, required this.userPlantName, required this.userPlantType, required this.moisture, required this.humidity, required this.temperature});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userNumber' : userNumber,
+      'userPlantNumber': userPlantNumber,
+      'userPlantName': userPlantName,
+      'userPlantType' : userPlantType,
+      'moisture': moisture,
+      'humidity': humidity,
+      'temperature': temperature,
+    };
+  }
+
+  factory HomeInfo.fromJson(Map<String, dynamic> json){
+    return HomeInfo(
+      userNumber: json['userNumber'] as int,
+      userPlantNumber : json['userPlantNumber'] as int,
+      userPlantName: json['userPlantName'] as String,
+      userPlantType: json['userPlantType'] as String,
+      moisture: json['moisture'] as double,
+      humidity: json['humidity'] as double,
+      temperature: json['temperature'] as double,
+    );
   }
 }
