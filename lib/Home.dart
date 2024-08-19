@@ -350,6 +350,36 @@ class home extends State<Home> with WidgetsBindingObserver {
                           ),
                         )),
                   ),
+
+                  // 캘린더
+                  Align(
+                    alignment: const Alignment(0.88, -0.98),
+                    child: GestureDetector(
+                      onTap: () {
+                        // 버튼 클릭 시 이동할 화면으로 네비게이트
+                        Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      calender(
+                                        wateredDate: wateringDates,
+                                      )),
+                        );
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/graph.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+
                   // 상태바
                   Container(
                       padding: const EdgeInsets.all(10),
@@ -558,7 +588,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 ],
                               )),
 
-
+                          
                           // D-day (자란 기간)
                           // SizedBox(
                           //     width: 280,
@@ -626,7 +656,7 @@ class home extends State<Home> with WidgetsBindingObserver {
 
                   // 식물 이미지
                   Align(
-                    alignment: const Alignment(0, -0.135), // 화분 위에 위치하도록 설정
+                    alignment: const Alignment(0, -0.085), // 화분 위에 위치하도록 설정
                     child: Image.asset(
                       plantImage,
                       width: 100,
