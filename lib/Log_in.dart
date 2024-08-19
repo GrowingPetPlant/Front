@@ -34,26 +34,36 @@ class _Log_inState extends State<Log_in> {
       return;
     }
 
-    // 로그인 시도
-    await dbService.login(User(id: id, password: password));
-
-    if (accessToken != null) {
-      // 로그인 성공 시 Home 화면으로 이동
-      //UserPlant? userplant = await findUserPlant(UserNumber(userNumber: loginResult));
-      //String plantName = userplant!.plantName;
-      List<HomeInfo>? homeInfo = await dbService.home();
-      print(homeInfo);
-      if(homeInfo!=null)
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Home(homeinfo: homeInfo, userNumber: homeInfo[0].userNumber)),
+    try {
+      // 로그인 시도
+      await dbService.login(User(id: id, password: password));
+      print(accessToken);
+      if (accessToken != null) {
+        // 로그인 성공 시 Home 화면으로 이동
+        //UserPlant? userplant = await findUserPlant(UserNumber(userNumber: loginResult));
+        //String plantName = userplant!.plantName;
+        List<HomeInfo>? homeInfo = await dbService.home();
+        if (homeInfo != null)
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) =>
+                Home(homeinfo: homeInfo, userNumber: homeInfo[0].userNumber)),
+          );
+      } else {
+        // 로그인 실패 시 사용자에게 알림
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('로그인 실패')),
         );
-    } else {
-      // 로그인 실패 시 사용자에게 알림
+      }
+    }
+    catch (e) {
+      print('로그인 중 오류 발생: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('로그인 실패')),
+        const SnackBar(content: Text('로그인 중 오류 발생')),
       );
     }
+
+
   }
 
   @override

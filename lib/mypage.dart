@@ -7,17 +7,15 @@ import 'package:flutter/widgets.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mypetplant/Home.dart';
 import 'package:mypetplant/Log_in.dart';
+import 'package:mypetplant/token.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 
 String text = "";
 
-List<String> dropdownList = ['토마토', '바질', '수박'];
-String? selectedDropdown;
-
 class My_page extends StatefulWidget {
-  final UserInfo_plant? userInfo_plant;
-  const My_page({super.key, this.userInfo_plant});
+  final UserInfo? userinfo;
+  const My_page({super.key, this.userinfo});
 
   @override
   State<My_page> createState() => _My_page_view();
@@ -28,8 +26,6 @@ class _My_page_view extends State<My_page> {
   late TextEditingController _passwordController;
   late TextEditingController _nameController;
   late TextEditingController _phoneNumberController;
-  late TextEditingController _plantNameController;
-  String plantType = "";
   String validPassword = "";
   String validName = "";
   String validPhoneNumber = "";
@@ -66,19 +62,17 @@ class _My_page_view extends State<My_page> {
   }
 
   void _mypage() async {
-    int userNumber = widget.userInfo_plant!.userNumber;
-    String id = widget.userInfo_plant!.id;
+    int userNumber = widget.userinfo!.userNumber;
+    String id = widget.userinfo!.id;
     String password = _passwordController.text;
     String name = _nameController.text;
     String phoneNumber = _phoneNumberController.text;
-    String plantName = _plantNameController.text;
 
     // 모두 입력했는지 확인
     if (id.isEmpty ||
         password.isEmpty ||
         name.isEmpty ||
-        phoneNumber.isEmpty ||
-        plantName.isEmpty) {
+        phoneNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('수정할 내용을 입력하세요')),
       );
@@ -86,26 +80,28 @@ class _My_page_view extends State<My_page> {
     }
 
     // 로그인 시도
-    String? editResult = await dbService.mypage(UserInfo_plant(
+    String? editResult = await dbService.mypage(UserInfo(
         userNumber: userNumber,
         id: id,
         password: password,
         userName: name,
         phoneNumber: phoneNumber,
-        plantName: plantName,
-        plantType: plantType));
+        ));
 
     if (editResult != null) {
       // 마이페이지 수정 성공 시 Home 화면으로 이동
-      /*Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Home(
-                  userNumber: userNumber,
-                  plantName: plantName,
-                )),
-      );*/
-    } else {
+      // 로그인 성공 시 Home 화면으로 이동
+      //UserPlant? userplant = await findUserPlant(UserNumber(userNumber: loginResult));
+      //String plantName = userplant!.plantName;
+      List<HomeInfo>? homeInfo = await dbService.home();
+      if (homeInfo != null)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              Home(homeinfo: homeInfo, userNumber: homeInfo[0].userNumber)),
+        );
+    }
+     else {
       // 로그인 실패 시 사용자에게 알림
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('마이페이지 수정 실패')),
@@ -160,33 +156,16 @@ class _My_page_view extends State<My_page> {
     });
   }
 
-  String _validatePlantNameLogic(String value) {
-    if (value == null || value.isEmpty) {
-      return '식물이름을 입력해주세요.';
-    }
-    return "";
-  }
-
-  void _validatePlantName(String value) {
-    setState(() {
-      validPlantName = _validatePlantNameLogic(value);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _idController = TextEditingController(text: widget.userInfo_plant!.id);
+    _idController = TextEditingController(text: widget.userinfo!.id);
     _passwordController =
-        TextEditingController(text: widget.userInfo_plant!.password);
+        TextEditingController(text: widget.userinfo!.password);
     _nameController =
-        TextEditingController(text: widget.userInfo_plant!.userName);
+        TextEditingController(text: widget.userinfo!.userName);
     _phoneNumberController =
-        TextEditingController(text: widget.userInfo_plant!.phoneNumber);
-    _plantNameController =
-        TextEditingController(text: widget.userInfo_plant!.plantName);
-    selectedDropdown = widget.userInfo_plant!.plantType;
-    plantType = widget.userInfo_plant!.plantType;
+        TextEditingController(text: widget.userinfo!.phoneNumber);
   }
 
   @override
@@ -196,7 +175,6 @@ class _My_page_view extends State<My_page> {
     _passwordController.dispose();
     _nameController.dispose();
     _phoneNumberController.dispose();
-    _plantNameController.dispose();
     super.dispose();
   }
 
@@ -386,93 +364,6 @@ class _My_page_view extends State<My_page> {
                     ),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '식물 종',
-                        style: TextStyle(fontSize: 11),
-                      ),
-                    ),
-                    DropdownButton2<String>(
-                      style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF515151)),
-                      hint: const Text('식물 종 선택'),
-                      isExpanded: true,
-                      underline: Container(),
-                      value: selectedDropdown,
-                      items: dropdownList.map((String item) {
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedDropdown = value as String;
-                        });
-                        plantType = value!;
-                      },
-                      buttonStyleData: ButtonStyleData(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: const Color(0xfff2f2f2),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                color: const Color(0xff81ae17), width: 2)),
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                          maxHeight: 200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          )),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '식물이름',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validPlantName,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: const Color(0xFF81AE17), width: 2),
-                      ),
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: TextField(
-                        controller: _plantNameController,
-                        onChanged: _validatePlantName,
-                        style: TextStyle(fontSize: 13),
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                  ],
-                ),
               ]),
             ),
           ),
@@ -539,7 +430,7 @@ class _My_page_view extends State<My_page> {
                     ),
                     TextButton(
                       onPressed: () {
-                        _deleteUser(widget.userInfo_plant!.id);
+                        _deleteUser(widget.userinfo!.id);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

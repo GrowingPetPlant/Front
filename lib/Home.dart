@@ -57,7 +57,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   // ];
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     WidgetsBinding.instance.addObserver(this); // 옵저버 추가
     _updateBackgroundImage(); //앱 시작 시 배경 이미지 업데이트
@@ -66,6 +66,13 @@ class home extends State<Home> with WidgetsBindingObserver {
     // _fetchMoisture(); //습도 데이터 가져오기
     // _fetchHumi(); //비옥도 데이터 가져오기
     // // _fetchGrowingDays(); //자란 일수 데이터 가져오기
+    plant = widget.homeinfo![0];
+    plantName = plant.userPlantName;
+    temperature = plant.temperature;
+    humidity = plant.humidity;
+    moisture = plant.moisture;
+    plantType = plant.userPlantType;
+    plantNumber = plant.userPlantNumber;
     _fetchLighting();
     _fetchFanning();
   }
@@ -268,15 +275,16 @@ class home extends State<Home> with WidgetsBindingObserver {
               onPageChanged: (index) {
                 setState(() {
                   _isAddPlantPage = index == widget.homeinfo!.length;
+                  if(!_isAddPlantPage){
+                    plant = widget.homeinfo![index];
+                    _fetchTemperature(); //온도 데이터 가져오기
+                    _fetchMoisture(); //습도 데이터 가져오기
+                    _fetchHumi(); //비옥도 데이터 가져오기
+                    // _fetchGrowingDays(); //자란 일수 데이터 가져오기
+                    _fetchLighting();
+                    _fetchFanning();
+                  }
                 });
-                if(!_isAddPlantPage){
-                  _fetchTemperature(); //온도 데이터 가져오기
-                  _fetchMoisture(); //습도 데이터 가져오기
-                  _fetchHumi(); //비옥도 데이터 가져오기
-                  // _fetchGrowingDays(); //자란 일수 데이터 가져오기
-                  _fetchLighting();
-                  _fetchFanning();
-                }
               },
               itemBuilder: (context, index) {
                 if (index == widget.homeinfo!.length) {
@@ -312,7 +320,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                             color: Colors.black45),
                         child: TextButton(
                           onPressed: () async {
-                            UserNumber userNumber;
+                            // UserNumber userNumber;
                             // if (widget.userNumber != null)
                             //   userNumber =
                             //       UserNumber(userNumber: widget.userNumber);
@@ -857,32 +865,21 @@ class home extends State<Home> with WidgetsBindingObserver {
                               // 마이페이지
                               IconButton(
                                 onPressed: () async {
-                                  UserNumber userNumber;
-                                  if (widget.userNumber != null)
-                                    userNumber =
-                                        UserNumber(
-                                            userNumber: widget.userNumber);
-                                  else
-                                    userNumber = UserNumber(userNumber: null);
-                                  UserInfo? userInfo = await findUser(
-                                      userNumber);
-                                  UserPlant? userplant =
-                                  await findUserPlant(userNumber);
-                                  if (userplant != null && userInfo != null) {
-                                    UserInfo_plant userinfo = UserInfo_plant(
+                                  UserInfo? userInfo = await findUser(UserNumber(userNumber: widget.userNumber));
+                                  if (userInfo != null) {
+                                    UserInfo userinfo = UserInfo(
                                         userNumber: widget.userNumber!,
                                         id: userInfo.id,
                                         password: userInfo.password,
                                         userName: userInfo.userName,
                                         phoneNumber: userInfo.phoneNumber,
-                                        plantType: userplant.plantType,
-                                        plantName: userplant.plantName);
+                                    );
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               My_page(
-                                                  userInfo_plant: userinfo)),
+                                                  userinfo: userinfo)),
                                     );
                                   }
                                 },
