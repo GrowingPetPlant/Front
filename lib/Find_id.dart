@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mypetplant/Log_in.dart';
 import 'package:mypetplant/user_service.dart';
 import 'package:mypetplant/widget.dart';
 import 'user.dart';
@@ -120,7 +121,7 @@ class _Find_idState extends State<Find_id> {
                 fixedSize: MaterialStateProperty.all<Size>(const Size.fromHeight(60)), // 높이 설정
               ),
               child: const Text(
-                '비밀번호 찾기',
+                '아이디 찾기',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFF2F2F2)), // 로그인 버튼의 텍스트 색상
               ),
             ),
@@ -156,6 +157,8 @@ void findIdDialog(context){
             Text(text,textAlign : TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff515151)),),
             TextButton(onPressed: (){
               Navigator.of(context).pop();
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) => const Log_in()));
             },
                 child: const Text("확인",style: TextStyle(fontSize: 16, color: Color(0xff81ae17)),)),
             ],

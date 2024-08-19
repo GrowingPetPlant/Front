@@ -55,8 +55,6 @@ class DBService {
   Future<List<HomeInfo>?> home() async {
     var url = Uri.parse(address + '/user/home');
     try {
-      print(refreshToken);
-      print(accessToken);
       var response = await http.get(
           url,
           headers: <String, String>{
@@ -123,7 +121,6 @@ class DBService {
         },
         body: jsonEncode(find_id.toJson()),
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         return response.body;
       } else {
@@ -161,15 +158,17 @@ class DBService {
     }
   }
 
-  Future<String?> mypage(UserInfo_plant userInfo_plant) async {
+  Future<String?> mypage(UserInfo userinfo) async {
     var url = Uri.parse(address + '/user/mypage');
     try {
       var response = await http.patch(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken!,
         },
-        body: utf8.encode(jsonEncode(userInfo_plant.toJson())),
+        body: utf8.encode(jsonEncode(userinfo.toJson())),
       );
       if (response.statusCode == 200) {
         // 마이페이지 수정 성공 처리
@@ -188,8 +187,17 @@ class DBService {
   Future<String?> logout() async {
     var url = Uri.parse(address + '/user/logout');
     try {
-      var response = await http.get(url);
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken!,
+        },
+      );
       if (response.statusCode == 200) {
+        accessToken = null;
+        refreshToken = null;
         return response.body;
       } else {
         // 요청이 실패하면 ""을 반환합니다.
@@ -209,10 +217,14 @@ class DBService {
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken!,
         },
       );
 
       if (response.statusCode == 200) {
+        accessToken = null;
+        refreshToken = null;
         return response.body;
       } else {
         // 요청이 실패하면 ""을 반환합니다.
@@ -266,8 +278,6 @@ class DBService {
            'Content-Type': 'application/json; charset=UTF-8',
          },
        );
-       print('Response status: ${response.statusCode}');
-       print('Response body: ${response.body}');
        if (response.statusCode == 200) {
          return true;
        } else {
@@ -289,8 +299,6 @@ class DBService {
            'Content-Type': 'application/json; charset=UTF-8',
          },
        );
-       print('Response status: ${response.statusCode}');
-       print('Response body: ${response.body}');
        if (response.statusCode == 200) {
          // 사용 가능 닉네임
          return true;
@@ -312,6 +320,8 @@ class DBService {
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken!,
         },
         body: jsonEncode(postWateringReq.toJson()),
       );
@@ -331,6 +341,8 @@ Future<String?> watering(PostWateringReq postWateringReq) async {
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+        'RefreshToken': refreshToken!,
       },
       body: jsonEncode(postWateringReq.toJson()),
     );
@@ -349,50 +361,22 @@ Future<UserInfo?> findUser(UserNumber userNumber) async {
       userNumber.userNumber!.toString());
   try {
     var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken!,
+        },
     );
     if (response.statusCode == 200) {
-      // 마이페이지 수정 성공 처리
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+      print(responseBody);
+      print(responseBody['user']);
+
       var userData = json.decode(utf8.decode(response.bodyBytes));
-      var userInfo = UserInfo.fromJson(userData);
+      var userInfo = UserInfo.fromJson(userData['user']);
       return userInfo;
     } else {
-      // 마이페이지 수정 실패 처리
-      return null;
-    }
-  } catch (e) {
-    // 네트워크 요청 중 에러 발생 처리
-    print(e);
-    return null;
-  }
-}
-
-Future<UserPlant?> findUserPlant(UserNumber userNumber) async {
-  var url = Uri.parse(address +
-      '/userplant/findUserPlant' +
-      '?userNumber=' +
-      userNumber.userNumber!.toString());
-  try {
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      // 마이페이지 수정 성공 처리
-      var userPlantData = json.decode(utf8.decode(response.bodyBytes));
-      var userPlant = UserPlant.fromJson(userPlantData);
-      UserPlant userplant = UserPlant(
-          plantNumber: userPlant.plantNumber,
-          plantType: userPlant.plantType,
-          plantName: userPlant.plantName);
-      return userplant;
-    } else {
-      // 마이페이지 수정 실패 처리
       return null;
     }
   } catch (e) {
@@ -407,16 +391,17 @@ Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async {
       address + '/status/wateringdate?plantNumber=' + plantNumber.toString());
   try {
     var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken!,
+        },
     );
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       List<DateTime> fetchedDates =
           data.where((date)=>date!=null).map((date) => DateTime.parse(date)).toList();
-
       return fetchedDates;
     } else {
       throw Exception('Failed to load watering dates');
