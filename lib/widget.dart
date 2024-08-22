@@ -8,14 +8,10 @@ class inputBox extends StatefulWidget {
   final void Function(String)? function;
   final double margin;
   final bool obscure;
+  final bool enabled;
 
   const inputBox(
-      {super.key,
-      required this.hint,
-      required this.controller,
-      this.function,
-      this.margin = 0,
-      this.obscure = false});
+      {super.key, required this.hint, required this.controller, this.function, this.margin=0, this.obscure = false, this.enabled = true});
 
   @override
   State<inputBox> createState() => _inputBoxState();
@@ -37,6 +33,7 @@ class _inputBoxState extends State<inputBox> {
           onChanged: widget.function,
           style: const TextStyle(fontSize: 16),
           obscureText: widget.obscure,
+          enabled: widget.enabled,
           decoration: InputDecoration(
             hintText: widget.hint,
             contentPadding: EdgeInsets.fromLTRB(15, 0, 15, 0),

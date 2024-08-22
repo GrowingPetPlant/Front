@@ -34,8 +34,8 @@ class home extends State<Home> with WidgetsBindingObserver {
   // int? _temperature; //온도 저장할 변수
   // int? _moisture; //습도 저장할 변수
   // int? _humidity; //비옥도 저장할 변수
-  // int? _days; //자란 일수 저장할 변수
-  // String _plantImage = 'assets/images/plant1.png'; // 기본 식물 이미지
+  int? _days; //자란 일수 저장할 변수
+  String _plantImage = 'assets/images/plant1.png'; // 기본 식물 이미지
   bool _isAddPlantPage = false;
   String plantName = "";
   double temperature = 0;
@@ -65,7 +65,6 @@ class home extends State<Home> with WidgetsBindingObserver {
     // _fetchTemperature(); //온도 데이터 가져오기
     // _fetchMoisture(); //습도 데이터 가져오기
     // _fetchHumi(); //비옥도 데이터 가져오기
-    // // _fetchGrowingDays(); //자란 일수 데이터 가져오기
     plant = widget.homeinfo![0];
     plantName = plant.userPlantName;
     temperature = plant.temperature;
@@ -73,6 +72,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     moisture = plant.moisture;
     plantType = plant.userPlantType;
     plantNumber = plant.userPlantNumber;
+    _fetchGrowingDays(); //자란 일수 데이터 가져오기
     _fetchLighting();
     _fetchFanning();
   }
@@ -95,7 +95,7 @@ class home extends State<Home> with WidgetsBindingObserver {
       // _fetchTemperature(); //온도 데이터 가져오기
       // _fetchMoisture(); //습도 데이터 가져오기
       // _fetchHumi(); //비옥도 데이터 가져오기
-      // // _fetchGrowingDays(); //자란 일수 데이터 가져오기
+      _fetchGrowingDays(); //자란 일수 데이터 가져오기
     }
   }
 
@@ -143,7 +143,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     String iso8601String_today = today.toIso8601String();
     if (wateringDate != null && wateringDate.isNotEmpty) {
       ifWatered = await dbService.putwater(PostWateringReq(
-          plantNumber: plantNumber,
+          userPlantNumber: plantNumber,
           wateringDate: iso8601String_today));
     } else {
       ifWatered = "물을 주시겠습니까?";
@@ -151,7 +151,7 @@ class home extends State<Home> with WidgetsBindingObserver {
     waterDialog(
         context,
         PostWateringReq(
-            plantNumber: plantNumber,
+            userPlantNumber: plantNumber,
             wateringDate: iso8601String_today));
   }
 
@@ -200,22 +200,20 @@ class home extends State<Home> with WidgetsBindingObserver {
       }
 
 
-  // 자란 일수 -> 수정필요
-  // void _fetchGrowingDays() async {
+  // 자란 일수
+  void _fetchGrowingDays() async {
     // if (widget.userNumber != null) {
     //   UserNumber userNumber = UserNumber(userNumber: widget.userNumber);
     //   UserPlant? userPlant = await findUserPlant(userNumber);
     //
     //   if (userPlant != null) {
-  //       StatusDays status =
-  //           await statusService.fetchGrowingDays(plantNumber);
-  //       setState(() {
-  //         _days = status.days;
-  //         _plantImage = _updatePlantImage()!;
-  //       });
-  //     }
-  //   }
-  // }
+        StatusDays status =
+            await statusService.fetchGrowingDays(plantNumber);
+        setState(() {
+          _days = status.days;
+          _plantImage = _updatePlantImage(plantType)!;
+        });
+  }
 
   void _fetchLighting() async {
     // if (widget.userNumber != null) {
@@ -244,21 +242,42 @@ class home extends State<Home> with WidgetsBindingObserver {
       }
 
   // 수정필요
-  // String? _updatePlantImage() {
-  //   if (_days != null) {
-  //     if (_days! <= 10) {
-  //       return 'assets/images/plant1.png';
-  //     } else if (_days! <= 20) {
-  //       return 'assets/images/plant2.png';
-  //     } else if (_days! <= 30) {
-  //       return 'assets/images/plant3.png';
-  //     } else if (_days! > 30) {
-  //       return 'assets/images/plant4.png';
-  //     }
-  //   }
-  //   else
-  //     return 'assets/images/plant1.png';
-  // }
+  String? _updatePlantImage(String plant) {
+    if (_days != null) {
+      if(plant=="상추") {
+        if (_days! <= 10) {
+          return 'assets/images/lettuce1.png';
+        } else if (_days! <= 20) {
+          return 'assets/images/lettuce2.png';
+        } else if (_days! > 20) {
+          return 'assets/images/lettuce3.png';
+        }
+      }
+      if (_days! <= 10) {
+        return 'assets/images/plant1.png';
+      } else if (_days! <= 20) {
+        return 'assets/images/plant2.png';
+      } else if (_days! <= 30) {
+        if(plant=="바질")
+          return 'assets/images/basil3.png';
+        else if(plant=="고추")
+          return 'assets/images/chilli3.png';
+        else
+          return 'assets/images/plant3.png';
+      }else if (_days! > 30) {
+        if(plant=="바질")
+          return 'assets/images/basil4.png';
+        else if(plant=="고추")
+          return 'assets/images/chilli4.png';
+        else if(plant=="오이")
+          return 'assets/images/chilli4.png';
+        else
+          return 'assets/images/plant4.png';
+      }
+    }
+    else
+      return 'assets/images/plant1.png';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +299,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                     _fetchTemperature(); //온도 데이터 가져오기
                     _fetchMoisture(); //습도 데이터 가져오기
                     _fetchHumi(); //비옥도 데이터 가져오기
-                    // _fetchGrowingDays(); //자란 일수 데이터 가져오기
+                    _fetchGrowingDays(); //자란 일수 데이터 가져오기
                     _fetchLighting();
                     _fetchFanning();
                   }
@@ -897,19 +916,12 @@ class home extends State<Home> with WidgetsBindingObserver {
                                 onPressed: () async {
                                   UserInfo? userInfo = await findUser(UserNumber(userNumber: widget.userNumber));
                                   if (userInfo != null) {
-                                    UserInfo userinfo = UserInfo(
-                                        userNumber: widget.userNumber!,
-                                        id: userInfo.id,
-                                        password: userInfo.password,
-                                        userName: userInfo.userName,
-                                        phoneNumber: userInfo.phoneNumber,
-                                    );
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               My_page(
-                                                  userinfo: userinfo)),
+                                                  userinfo: userInfo)),
                                     );
                                   }
                                 },

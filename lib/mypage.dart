@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +11,7 @@ import 'package:mypetplant/Log_in.dart';
 import 'package:mypetplant/token.dart';
 import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
+import 'package:mypetplant/widget.dart';
 
 String text = "";
 
@@ -30,6 +32,7 @@ class _My_page_view extends State<My_page> {
   String validName = "";
   String validPhoneNumber = "";
   String validPlantName = "";
+  bool auto = false;
 
   DBService dbService = DBService(); // DBService 인스턴스 생성
 
@@ -79,13 +82,13 @@ class _My_page_view extends State<My_page> {
       return;
     }
 
-    // 로그인 시도
     String? editResult = await dbService.mypage(UserInfo(
         userNumber: userNumber,
         id: id,
         password: password,
         userName: name,
         phoneNumber: phoneNumber,
+        auto: auto
         ));
 
     if (editResult != null) {
@@ -188,186 +191,97 @@ class _My_page_view extends State<My_page> {
           padding: EdgeInsets.all(screenHeight * 0.04),
           child: SingleChildScrollView(
             child: Container(
-              child: Column(children: [
-                SizedBox(
-                    height: screenHeight * 0.15,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          height: screenHeight * 0.1,
-                        ),
-                        const Text('회원정보 수정',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF56280F))),
-                      ],
-                    )),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(screenHeight * 0.01),
-                      child: const Text(
-                        '아이디',
-                        style: TextStyle(fontSize: 11),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: const Color(0xFF81AE17), width: 2),
-                      ),
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: TextField(
-                        controller: _idController,
-                        enabled: false,
-                        style: TextStyle(fontSize: 13),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                    logoTitle(text: '회원정보수정', screenHeight: screenHeight),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '비밀번호',
-                            style: TextStyle(fontSize: 11),
-                          ),
+                        Row(
+                          children: [
+                            titleInputBox(title: '아이디', screenHeight: screenHeight),
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validPassword,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
-                        ),
+                        inputBox(hint: '아이디를 입력해주세요', controller: _idController, enabled : false)
                       ],
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: const Color(0xFF81AE17), width: 2),
-                      ),
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        onChanged: _validatePassword,
-                        style: TextStyle(fontSize: 13),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '이름',
-                            style: TextStyle(fontSize: 11),
-                          ),
+                        Row(
+                          children: [
+                            titleInputBox(title: '비밀번호', screenHeight: screenHeight),
+                            warningText(text: validPassword, screenHeight: screenHeight)
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validName,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
+                        inputBox(hint: '비밀번호를 입력해주세요', controller: _passwordController, function: _validatePassword,obscure: true,)
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            titleInputBox(title: '닉네임', screenHeight: screenHeight),
+                            warningText(text: validName, screenHeight: screenHeight)
+                          ],
+                        ),
+                        inputBox(hint: '닉네임을 입력해주세요', controller: _nameController, function: _validateUserName,)
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            titleInputBox(title: '전화번호', screenHeight: screenHeight),
+                            warningText(text: validPhoneNumber, screenHeight: screenHeight)
+                          ],
+                        ),
+                        inputBox(hint: '전화번호를 입력해주세요', controller: _phoneNumberController, function: _validatePhoneNumber,)
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children : [
+                            Padding(padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+                              child : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    Text(
+                                      "자동화 설정",
+                                      style: TextStyle(fontSize: 14, fontWeight: ui.FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "식물이 자라는 최적의 환경을 자동으로 유지해줍니다!",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                            ),
+                            Switch(
+                              value: auto,
+                              onChanged: (value) { setState(() { auto = value; });
+                                print(auto);
+                              },
+                              inactiveTrackColor: Color(0xffffffff),
+                              inactiveThumbColor: Color(0x8081AE17),
+                              activeTrackColor: Color(0x8081AE17),
+                              trackOutlineColor: MaterialStateColor.resolveWith((states) => Color(0x8081AE17)),
+                            )
+                          ]
+
+                          )
+                        ]
                         ),
                       ],
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: const Color(0xFF81AE17), width: 2),
-                      ),
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: TextField(
-                        controller: _nameController,
-                        onChanged: _validateUserName,
-                        style: TextStyle(fontSize: 13),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.01),
-                          child: const Text(
-                            '전화번호',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01),
-                          child: Text(
-                            validPhoneNumber,
-                            style: TextStyle(fontSize: 11, color: Colors.red),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: const Color(0xFF81AE17), width: 2),
-                      ),
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: TextField(
-                        controller: _phoneNumberController,
-                        onChanged: _validatePhoneNumber,
-                        style: TextStyle(fontSize: 13),
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                  ],
-                ),
-              ]),
+
+              ),
             ),
           ),
-        ),
         bottomNavigationBar: Container(
           color: const Color(0xfff2f2f2),
           padding: EdgeInsets.only(
