@@ -7,8 +7,8 @@ https://www.notion.so/seojins/Front-169cdabdaf834fa19f69bccc66da1f81
 <br>
 
 ## 📌 동영상 삽입 예제 설명
-#### [GrowingPetPlant⬇️](https://youtu.be/tYKX8im01rE)
-<a href="https://youtu.be/GKlMWVufCGE"><img src="https://github.com/GrowingPetPlant/Front/assets/107312651/1b2ea40e-6151-4f9f-8696-5a3f6c26ecf5" width="30%" height="30%"/></a>
+#### [GrowingPetPlant⬇️](https://youtu.be/KiN48zQZr0g)
+<a href="https://youtu.be/KiN48zQZr0g"><img src="https://github.com/GrowingPetPlant/Front/assets/107312651/1b2ea40e-6151-4f9f-8696-5a3f6c26ecf5" width="30%" height="30%"/></a>
 <br>
 
 ## 📌 프로젝트 소개
