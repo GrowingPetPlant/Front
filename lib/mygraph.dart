@@ -67,9 +67,8 @@ class MyBarGraph extends StatelessWidget {
     //  }
     //}
 
-    double _maxY = (count.reduce(max)/5).ceil()*5;
-    double _minY = (count.reduce(min)/5).floor()*5;
-
+    double _maxY = (count.reduce(max) / 5).ceil() * 5;
+    double _minY = (count.reduce(min) / 5).floor() * 5;
 
     return BarChart(BarChartData(
       maxY: _maxY,
@@ -80,27 +79,27 @@ class MyBarGraph extends StatelessWidget {
           show: true,
           topTitles: AxisTitles(
               sideTitles: SideTitles(showTitles: false),
-              drawBehindEverything: true),
+              drawBelowEverything: true),
           leftTitles: AxisTitles(
-            //좌측 y축 레이블
+              //좌측 y축 레이블
               sideTitles: SideTitles(
                   showTitles: true, getTitlesWidget: leftTitleWidgets)),
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
-            //하단 x축 레이블
+              //하단 x축 레이블
               sideTitles: SideTitles(
                   showTitles: true, getTitlesWidget: getBottomTitles))),
       backgroundColor: Color.fromRGBO(237, 246, 184, 1), // 그래프 배경 색
       barGroups: myBarData.barData
           .map((data) => BarChartGroupData(x: data.x, barRods: [
-        BarChartRodData(
-          //차트 바 스타일
-          toY: data.y,
-          color: const Color(0xFF81AE17),
-          width: 25,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ]))
+                BarChartRodData(
+                  //차트 바 스타일
+                  toY: data.y,
+                  color: const Color(0xFF81AE17),
+                  width: 25,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ]))
           .toList(),
     ));
   }

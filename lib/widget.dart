@@ -10,7 +10,12 @@ class inputBox extends StatefulWidget {
   final bool obscure;
 
   const inputBox(
-      {super.key, required this.hint, required this.controller, this.function, this.margin=0, this.obscure = false});
+      {super.key,
+      required this.hint,
+      required this.controller,
+      this.function,
+      this.margin = 0,
+      this.obscure = false});
 
   @override
   State<inputBox> createState() => _inputBoxState();
@@ -22,10 +27,9 @@ class _inputBoxState extends State<inputBox> {
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 0, widget.margin),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF81AE17), width: 2),
-        color: Color(0xffffffff)
-      ),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF81AE17), width: 2),
+          color: Color(0xffffffff)),
       child: SizedBox(
         height: 50, // 텍스트 필드 창 높이 조절
         child: TextField(
@@ -241,7 +245,8 @@ class plantLogoTitle extends StatelessWidget {
   final String text;
   final double screenHeight;
 
-  const plantLogoTitle({super.key, required this.text, required this.screenHeight});
+  const plantLogoTitle(
+      {super.key, required this.text, required this.screenHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +260,7 @@ class plantLogoTitle extends StatelessWidget {
             height: screenHeight * 0.1,
           ),
           Text(
-            //로고 아래 제목
+              //로고 아래 제목
               text,
               style: TextStyle(
                   fontSize: 16,
@@ -472,5 +477,41 @@ class textButton extends StatelessWidget {
       ),
     );
     throw UnimplementedError();
+  }
+}
+
+class plantInfoBox extends StatefulWidget {
+  final String text;
+
+  const plantInfoBox({super.key, required this.text});
+
+  @override
+  State<plantInfoBox> createState() => _plantInfoBoxState();
+}
+
+class _plantInfoBoxState extends State<plantInfoBox> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      width: 400,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF81AE17), width: 2),
+          color: Color.fromARGB(146, 255, 255, 255)),
+      child: SizedBox(
+        child: Center(
+          child: Text(
+            widget.text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

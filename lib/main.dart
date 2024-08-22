@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mypetplant/Home.dart';
+import 'package:mypetplant/Plant_status.dart';
 import 'package:mypetplant/Sign_in.dart';
 import 'package:mypetplant/calender.dart';
 import './Log_in.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'MyPetPlant',
-      home: Log_in(),
+      home: Plant_status(),
     );
   }
 }
