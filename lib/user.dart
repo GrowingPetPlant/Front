@@ -229,3 +229,17 @@ class HomeInfo {
     );
   }
 }
+
+class userPlantName {
+  final int plantNumber;
+  final String plantName;
+
+  userPlantName({required this.plantNumber, required this.plantName});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userPlantNumber' : plantNumber,
+      'userPlantName': plantName,
+    };
+  }
+}

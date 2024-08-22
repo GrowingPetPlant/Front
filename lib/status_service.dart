@@ -9,6 +9,23 @@ import 'status.dart';
 String address = "http://35.216.16.211:8080";
 
 class StatusService {
+
+  Future<plantInfo> Info(int plantNumber) async{
+    var url = Uri.parse('$address/plant?plantNumber=$plantNumber');
+    final response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+        'RefreshToken': refreshToken!,
+      },
+    );
+    if (response.statusCode == 200) {
+      return plantInfo.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('식물 정보 불러오기 실패했습니다.');
+    }
+  }
   //온도
   Future<StatusTemp> fetchRecentTemp(int plantNumber) async {
     var url = Uri.parse('$address/status/temp?plantNumber=$plantNumber');
@@ -76,7 +93,6 @@ class StatusService {
         'RefreshToken': refreshToken!,
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return StatusDays.fromJson(jsonDecode(response.body));
     } else {
@@ -115,7 +131,6 @@ class StatusService {
         'RefreshToken': refreshToken!,
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       if (jsonDecode(response.body)) {
         return "ON";
@@ -158,7 +173,6 @@ class StatusService {
         'RefreshToken': refreshToken!,
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       if (jsonDecode(response.body)) {
         return "ON";
