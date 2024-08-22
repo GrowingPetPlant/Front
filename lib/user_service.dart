@@ -23,7 +23,6 @@ class DBService {
         body: jsonEncode(user.toJson()),
       );
       if (response.statusCode == 200) {
-        print(response.body);
         // 로그인 성공 처리
         try {
           Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -64,7 +63,6 @@ class DBService {
           },);
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-        print(data);
         List<HomeInfo> home = [];
         for(var item in data){
           HomeInfo homeInfo = HomeInfo.fromJson(item);
@@ -325,7 +323,6 @@ class DBService {
         },
         body: jsonEncode(postWateringReq.toJson()),
       );
-      print(response.statusCode);
       return response.body;
     } catch (e) {
       // 네트워크 요청 중 에러 발생 처리 null 반환
@@ -347,7 +344,6 @@ Future<String?> watering(PostWateringReq postWateringReq) async {
       },
       body: jsonEncode(postWateringReq.toJson()),
     );
-    print(response.statusCode);
     return response.body;
   } catch (e) {
     // 네트워크 요청 중 에러 발생 처리 null 반환
@@ -407,5 +403,58 @@ Future<List<DateTime>?> fetchWarteringDates(int plantNumber) async {
   } catch (e) {
     // 네트워크 에러
     print(e);
+  }
+}
+
+//식물삭제
+Future<String?> deletePlant(int plantNumber) async {
+  var url = Uri.parse(address + '/userplant/delete/' + plantNumber.toString());
+  try {
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+        'RefreshToken': refreshToken!,
+      },
+    );
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      // 요청이 실패하면 ""을 반환합니다.
+      return "";
+    }
+  } catch (e) {
+    // 네트워크 요청 중 에러 발생 처리 null 반환
+    print(e);
+    return null;
+  }
+}
+
+//식물이름수정
+Future<String?> changePlantName(userPlantName userPlantName) async {
+  var url = Uri.parse(address + '/userplant/change-name');
+  print(userPlantName.plantNumber);
+  try {
+    var response = await http.patch(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+        'RefreshToken': refreshToken!,
+      },
+      body: utf8.encode(jsonEncode(userPlantName.toJson())),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      // 요청이 실패하면 ""을 반환합니다.
+      return "";
+    }
+  } catch (e) {
+    // 네트워크 요청 중 에러 발생 처리 null 반환
+    print(e);
+    return null;
   }
 }

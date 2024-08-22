@@ -271,7 +271,7 @@ class plantLogoTitle extends StatelessWidget {
 }
 
 // 식물 종 선택 드롭박스
-List<String> dropdownList = ['토마토', '바질', '수박'];
+List<String> dropdownList = ['토마토', '오이','바질', '고추', '상추'];
 
 class dropDownBox extends StatelessWidget {
   final String? value;
@@ -491,7 +491,7 @@ class _plantInfoBoxState extends State<plantInfoBox> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      width: 400,
+      width: 300,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: const Color(0xFF81AE17), width: 2),
@@ -503,8 +503,52 @@ class _plantInfoBoxState extends State<plantInfoBox> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 25,
+              fontSize: 20,
               color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class plantInfoEditBox extends StatefulWidget {
+  final String hint;
+  final TextEditingController controller;
+  final void Function(String)? function;
+
+  const plantInfoEditBox({super.key, required this.hint, required this.controller, required this.function});
+
+  @override
+  State<plantInfoEditBox> createState() => _plantInfoEditBoxState();
+}
+
+class _plantInfoEditBoxState extends State<plantInfoEditBox> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      width: 300,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF81AE17), width: 2),
+          color: Color.fromARGB(146, 255, 255, 255)),
+      child: SizedBox(
+        child: Center(
+          child: TextField(
+            controller: widget.controller,
+            onChanged: widget.function,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.black,
+            ),
+            decoration: InputDecoration(
+              hintText: widget.hint,
+              border: InputBorder.none,
             ),
           ),
         ),

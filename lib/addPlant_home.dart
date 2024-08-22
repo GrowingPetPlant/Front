@@ -6,7 +6,7 @@ import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 import 'package:mypetplant/widget.dart';
 
-List<String> dropdownList = ['토마토', '바질', '수박'];
+List<String> dropdownList = ['토마토', '오이','바질', '고추', '상추'];
 String? selectedDropdown;
 
 class addPlant_home extends StatefulWidget {

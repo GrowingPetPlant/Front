@@ -1,3 +1,25 @@
+class plantInfo {
+  final int plantNumber;
+  final String plantType;
+  final int growthPeriod;
+  final int highTemp;
+  final int lowTemp;
+  final int optMoisture;
+
+  plantInfo({required this.plantNumber, required this.plantType, required this.growthPeriod, required this.highTemp, required this.lowTemp, required this.optMoisture});
+
+  factory plantInfo.fromJson(dynamic json) {
+    return plantInfo(
+      plantNumber: json['plantNumber'] as int,
+      plantType: json['plantType'] as String,
+      growthPeriod: json['growthPeriod'] as int,
+      highTemp: json['highTemp'] as int,
+      lowTemp: json['lowTemp'] as int,
+      optMoisture: json['optMoisture'] as int
+    );
+  }
+}
+
 //온도
 class StatusTemp {
   final double temperature;

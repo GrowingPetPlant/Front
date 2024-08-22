@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mypetplant/Plant_status.dart';
 import 'package:mypetplant/calender.dart';
 import 'package:mypetplant/mypage.dart';
 import 'package:mypetplant/user.dart';
@@ -31,6 +32,7 @@ class home extends State<Home> with WidgetsBindingObserver {
   Timer? _timer;
   DBService dbService = DBService(); // DBService 인스턴스 생성
 
+
   // int? _temperature; //온도 저장할 변수
   // int? _moisture; //습도 저장할 변수
   // int? _humidity; //비옥도 저장할 변수
@@ -43,7 +45,6 @@ class home extends State<Home> with WidgetsBindingObserver {
   double moisture = 0;
   String plantType = "";
   int plantNumber = 0;
-  String plantImage = 'assets/images/plant1.png'; // 기본 식물 이미지
   HomeInfo plant = HomeInfo(userNumber: 0, userPlantNumber: 0, userPlantName: "", userPlantType: "", moisture: 0, humidity: 0, temperature: 0);
 
   List<DateTime>? wateringDates = [];
@@ -66,12 +67,12 @@ class home extends State<Home> with WidgetsBindingObserver {
     // _fetchMoisture(); //습도 데이터 가져오기
     // _fetchHumi(); //비옥도 데이터 가져오기
     plant = widget.homeinfo![0];
+    plantNumber = plant.userPlantNumber;
     plantName = plant.userPlantName;
     temperature = plant.temperature;
     humidity = plant.humidity;
     moisture = plant.moisture;
     plantType = plant.userPlantType;
-    plantNumber = plant.userPlantNumber;
     _fetchGrowingDays(); //자란 일수 데이터 가져오기
     _fetchLighting();
     _fetchFanning();
@@ -95,7 +96,7 @@ class home extends State<Home> with WidgetsBindingObserver {
       // _fetchTemperature(); //온도 데이터 가져오기
       // _fetchMoisture(); //습도 데이터 가져오기
       // _fetchHumi(); //비옥도 데이터 가져오기
-      _fetchGrowingDays(); //자란 일수 데이터 가져오기
+      // _fetchGrowingDays(); //자란 일수 데이터 가져오기
     }
   }
 
@@ -131,6 +132,41 @@ class home extends State<Home> with WidgetsBindingObserver {
       _updateBackgroundImage();
       _setNextUpdate();
     });
+  }
+
+  int getPlantTypeNumber(String plantType) {
+    switch (plantType) {
+      case '토마토':
+        return 1;
+      case '오이':
+        return 2;
+      case '바질':
+        return 3;
+      case '고추':
+        return 4;
+      case '상추':
+        return 5;
+      default:
+        throw ArgumentError('Unknown plant type: $plantType');
+    }
+  }
+
+  void _plantInfo() async{
+    plantInfo info = await statusService.Info(getPlantTypeNumber(plantType));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              Plant_status(
+                plantname : plantName,
+                plantnumber : plantNumber,
+                planttype : plantType,
+                days: _days,
+                optMoisture : info.optMoisture,
+                highTemp: info.highTemp,
+                lowTemp: info.lowTemp,
+              )),
+    );
   }
 
   void _putWater() async {
@@ -241,7 +277,6 @@ class home extends State<Home> with WidgetsBindingObserver {
         });
       }
 
-  // 수정필요
   String? _updatePlantImage(String plant) {
     if (_days != null) {
       if(plant=="상추") {
@@ -299,9 +334,9 @@ class home extends State<Home> with WidgetsBindingObserver {
                     _fetchTemperature(); //온도 데이터 가져오기
                     _fetchMoisture(); //습도 데이터 가져오기
                     _fetchHumi(); //비옥도 데이터 가져오기
-                    _fetchGrowingDays(); //자란 일수 데이터 가져오기
                     _fetchLighting();
                     _fetchFanning();
+                    _fetchGrowingDays(); //자란 일수 데이터 가져오기
                   }
                 });
               },
@@ -313,12 +348,13 @@ class home extends State<Home> with WidgetsBindingObserver {
                 else {
                   _isAddPlantPage = false;
                   plant = widget.homeinfo![index];
+                  plantNumber = plant.userPlantNumber;
                   plantName = plant.userPlantName;
                   temperature = plant.temperature;
                   humidity = plant.humidity;
                   moisture = plant.moisture;
                   plantType = plant.userPlantType;
-                  plantNumber = plant.userPlantNumber;
+                  _fetchGrowingDays();
                 }
                 return Stack(children: <Widget>[
                   // 배경이미지
@@ -339,25 +375,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                             color: Colors.black45),
                         child: TextButton(
                           onPressed: () async {
-                            // UserNumber userNumber;
-                            // if (widget.userNumber != null)
-                            //   userNumber =
-                            //       UserNumber(userNumber: widget.userNumber);
-                            // else
-                            //   userNumber = UserNumber(userNumber: null);
-                            // UserPlant? userplant = await findUserPlant(
-                            //     userNumber);
-                            wateringDates =
-                            await fetchWarteringDates(plantNumber);
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      calender(
-                                        wateredDate: wateringDates,
-                                      )),
-                            );
+                            _plantInfo();
                           },
                           child: Text(
                             plantName,
@@ -374,7 +392,9 @@ class home extends State<Home> with WidgetsBindingObserver {
                   Align(
                     alignment: const Alignment(0.88, -0.98),
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async{
+                        wateringDates =
+                            await fetchWarteringDates(plantNumber);
                         // 버튼 클릭 시 이동할 화면으로 네비게이트
                         Navigator.push(
                               context,
@@ -677,7 +697,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                   Align(
                     alignment: const Alignment(0, -0.085), // 화분 위에 위치하도록 설정
                     child: Image.asset(
-                      plantImage,
+                      _plantImage,
                       width: 100,
                       height: 100,
                     ),

@@ -7,7 +7,7 @@ import 'package:mypetplant/user.dart';
 import 'package:mypetplant/user_service.dart';
 import 'package:mypetplant/widget.dart';
 
-List<String> dropdownList = ['토마토', '바질', '수박'];
+List<String> dropdownList = ['토마토', '오이','바질', '고추', '상추'];
 String? selectedDropdown;
 
 class addPlantInHome extends StatefulWidget {
@@ -68,6 +68,13 @@ class AddPlantInHome extends State<addPlantInHome> {
           backgroundColor: Colors.green,
         ),
       );
+      List<HomeInfo>? homeInfo = await dbService.home();
+      if (homeInfo != null)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              Home(homeinfo: homeInfo, userNumber: homeInfo[0].userNumber)),
+        );
     }
   }
 

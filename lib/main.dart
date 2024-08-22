@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'MyPetPlant',
-      home: Plant_status(),
+      home: Log_in(),
     );
   }
 }
