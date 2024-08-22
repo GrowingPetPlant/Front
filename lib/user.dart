@@ -59,8 +59,9 @@ class UserInfo {
   final String password;
   final String userName;
   final String phoneNumber;
+  final bool? auto;
 
-  UserInfo({required this.userNumber, required this.id, required this.password, required this.userName, required this.phoneNumber});
+  UserInfo({required this.userNumber, required this.id, required this.password, required this.userName, required this.phoneNumber, required this.auto});
 
   factory UserInfo.fromJson(Map<String, dynamic> json){
     return UserInfo(
@@ -69,6 +70,7 @@ class UserInfo {
       password: json['password'] as String,
       userName: json['userName'] as String,
       phoneNumber: json['phoneNumber'] as String,
+      auto: json['auto'] as bool?
     );
   }
 
@@ -79,6 +81,7 @@ class UserInfo {
       'password': password,
       'userName': userName,
       'phoneNumber': phoneNumber,
+      'auto' : auto
     };
   }
 }
@@ -175,17 +178,17 @@ class AddPlant {
 }
 
 class PostWateringReq{
-  final int plantNumber;
+  final int userPlantNumber;
   final String wateringDate;
 
   PostWateringReq({
-   required this.plantNumber,
+   required this.userPlantNumber,
    required this.wateringDate
   });
 
   Map<String, dynamic> toJson(){
     return{
-      'plantNumber' : plantNumber,
+      'userPlantNumber' : userPlantNumber,
       'wateringDate' : wateringDate
     };
   }

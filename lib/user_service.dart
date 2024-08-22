@@ -325,6 +325,7 @@ class DBService {
         },
         body: jsonEncode(postWateringReq.toJson()),
       );
+      print(response.statusCode);
       return response.body;
     } catch (e) {
       // 네트워크 요청 중 에러 발생 처리 null 반환
@@ -346,6 +347,7 @@ Future<String?> watering(PostWateringReq postWateringReq) async {
       },
       body: jsonEncode(postWateringReq.toJson()),
     );
+    print(response.statusCode);
     return response.body;
   } catch (e) {
     // 네트워크 요청 중 에러 발생 처리 null 반환
@@ -369,12 +371,8 @@ Future<UserInfo?> findUser(UserNumber userNumber) async {
         },
     );
     if (response.statusCode == 200) {
-      Map<String, dynamic> responseBody = jsonDecode(response.body);
-      print(responseBody);
-      print(responseBody['user']);
-
       var userData = json.decode(utf8.decode(response.bodyBytes));
-      var userInfo = UserInfo.fromJson(userData['user']);
+      var userInfo = UserInfo.fromJson(userData);
       return userInfo;
     } else {
       return null;

@@ -76,6 +76,7 @@ class StatusService {
         'RefreshToken': refreshToken!,
       },
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return StatusDays.fromJson(jsonDecode(response.body));
     } else {
