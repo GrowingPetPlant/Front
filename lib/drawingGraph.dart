@@ -1,17 +1,32 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mypetplant/token.dart';
 
 //String address = "http://localhost:8080";
-String address = "http://172.30.1.86:8080";
+// String address = "http://172.30.1.86:8080";
 //String address = "http://35.216.120.157:8080";
+String address = "http://35.216.16.211:8080";
 
 class drawingGraph {
   //온도
-  Future<GraphInfo> fetchGraphInfo(DateTime selectedDay) async {
+  Future<GraphInfo> fetchGraphInfo(DateTime selectedDay, int userPlantNumber) async {
     String iso8601String_selectedDay =
         selectedDay.toIso8601String().substring(0, 10);
+    var url = Uri.parse('$address/graph/display').replace(queryParameters: {
+      'userPlantNumber': userPlantNumber.toString(),
+      'date': iso8601String_selectedDay,
+    });
+    // var url = Uri.parse('$address/graph/display?userPlantNumber=$userPlantNumber&date=$iso8601String_selectedDay');
     final response = await http.get(
-        Uri.parse('$address/graph/display?date=$iso8601String_selectedDay'));
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+        'RefreshToken': refreshToken!,
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
 
     if (response.statusCode == 200) {
       if (response.body != null) //그래프정보불러오기 성공해서 DB에 값 있는 경우(오늘날짜 전 날짜는 없으면 모든 값 0으로 DB생성해서 return)

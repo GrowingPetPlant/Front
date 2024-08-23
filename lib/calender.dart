@@ -7,7 +7,8 @@ import 'package:mypetplant/drawingGraph.dart';
 
 class calender extends StatefulWidget {
   final List<DateTime>? wateredDate;
-  const calender({Key? key, this.wateredDate}) : super(key: key);
+  final int? plantNumber;
+  const calender({Key? key, this.wateredDate, this.plantNumber}) : super(key: key);
 
   State<calender> createState() => _CalendarState();
 }
@@ -295,7 +296,7 @@ class _CalendarState extends State<calender> {
   }
 
   void getGraphInfo() async {
-    GraphInfo graphInfo = await graph.fetchGraphInfo(selectedDay);
+    GraphInfo graphInfo = await graph.fetchGraphInfo(selectedDay, widget.plantNumber!);
     setState(() {
       list_Humi = [
         graphInfo.humiDawn,

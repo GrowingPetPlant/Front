@@ -402,6 +402,7 @@ class home extends State<Home> with WidgetsBindingObserver {
                                   builder: (context) =>
                                       calender(
                                         wateredDate: wateringDates,
+                                        plantNumber: plantNumber,
                                       )),
                         );
                       },
