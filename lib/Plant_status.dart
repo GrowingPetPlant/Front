@@ -214,7 +214,7 @@ class _Plant_statusState extends State<Plant_status> {
                               ),
                             ),
                             Text(
-                              widget.optMoisture.toString(),
+                              widget.optMoisture.toString()+'%',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 25,
